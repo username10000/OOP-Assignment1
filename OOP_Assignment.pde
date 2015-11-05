@@ -110,7 +110,7 @@ void setup()
   }
   */
   
-  //Wrong trend graph?
+  //Working
 }
 
 void draw()
