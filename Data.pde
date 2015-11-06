@@ -8,10 +8,10 @@ class Data
   
   Data(String s1, String s2, String s3, String s4, String s5) 
   {
-    id = s1;
-    launchVehicle = s2;
-    payload = s3;
-    country = s4;
-    date = s5;
+    this.id = s1;
+    this.launchVehicle = s2;
+    this.payload = s3;
+    this.country = s4;
+    this.date = s5;
   }
 }
