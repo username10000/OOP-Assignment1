@@ -69,6 +69,9 @@ void trendGraph(ArrayList <Data> spaceLaunches, int minVert, int maxVert, int di
   float x1 = 0, y1 = 0;
   float x2, y2;
   
+  beginShape();
+  vertex(bor, height - bor);
+  
   for (int i = 1 ; i < spaceLaunches.size() ; i++)
   {
     int curYear = Integer.parseInt(spaceLaunches.get(i).id.substring(0, 4));
@@ -76,15 +79,17 @@ void trendGraph(ArrayList <Data> spaceLaunches, int minVert, int maxVert, int di
     
     x2 = map(curYear, minHorz, maxHorz, bor, width - bor);
     y2 = map(count, minVert, maxVert, height - bor, bor);
-    
+    vertex(x2, y2);
     if ( ( i != 1 ) && (!spaceLaunches.get(i).id.substring(0, 4).equals(spaceLaunches.get(i - 1).id.substring(0, 4))) )
     {
-      line(x1, y1, x2, y2);
+      //line(x1, y1, x2, y2);
     }
     
     x1 = x2;
     y1 = y2;
   }
+  vertex(width - bor, height - bor);
+  endShape(CLOSE);
 }
 
 void drawVertAxis(int minVert, int maxVert, int dif, float bor)
@@ -158,8 +163,9 @@ void setup()
 {
   // Setup
   size(displayWidth / 2, displayHeight / 2);
-  background(0);
-  stroke(255);
+  background(255);
+  stroke(0);
+  fill(0);
   textAlign(CENTER, CENTER); 
   
   thread("loadData");
@@ -169,14 +175,20 @@ void draw()
 {
   if(loading)
   {
-    background(0);
+    background(255);
+    textSize(20);
     text("Loading...", width / 2, height / 2);
+    textSize(12);
   }
   else
   {
-    background(0);
+    background(255);
+    fill(0);
+    stroke(0);
     drawVertAxis(minFreq, maxFreq + 1, 10, border);
     drawHorzAxis(minYear, maxYear, 3, border);
+    fill(0, 0, 255);
+    noStroke();
     trendGraph(spaceLaunches, minFreq, maxFreq, 1, minYear, maxYear, 1, border);
   }
 }
