@@ -1,5 +1,11 @@
+import controlP5.*;
+
+
 //boolean sketchFullScreen() { return true; }
+ControlP5 controlP5;
 boolean loading = false;
+boolean menu = true;
+color bgColor = color(255);
 ArrayList<Data> spaceLaunches = new ArrayList<Data>();
 float border;
 int minYear, maxYear, minFreq, maxFreq;
@@ -76,6 +82,7 @@ void trendGraph(ArrayList <Data> spaceLaunches, int minVert, int maxVert, int di
   {
     int curYear = Integer.parseInt(spaceLaunches.get(i).id.substring(0, 4));
     int count = frequencyEachYear(spaceLaunches, curYear);
+    // Make a frequency array where the index is currentYear - firstYear (ie 1958 -> 1958 - 1957 = 1)
     
     x2 = map(curYear, minHorz, maxHorz, bor, width - bor);
     y2 = map(count, minVert, maxVert, height - bor, bor);
@@ -159,30 +166,37 @@ void loadData()
   */
 }
 
-void setup()
+void drawLoading()
 {
-  // Setup
-  size(displayWidth / 2, displayHeight / 2);
-  background(255);
-  stroke(0);
+  background(bgColor);
+  textSize(20);
   fill(0);
-  textAlign(CENTER, CENTER); 
-  
-  thread("loadData");
+  text("Loading...", width / 2, height / 2);
+  textSize(12);
 }
 
-void draw()
+void drawMenu()
 {
-  if(loading)
-  {
-    background(255);
-    textSize(20);
-    text("Loading...", width / 2, height / 2);
-    textSize(12);
-  }
-  else
-  {
-    background(255);
+  background(bgColor);
+  
+  // Map the positions of the buttons
+  
+  int w = 200;
+  int halfW = w / 2;
+  int h = 50;
+  int space = h + 10;
+  int startH = 100;
+  
+  controlP5 = new ControlP5(this);
+  controlP5.addGroup("menu");
+  controlP5.addButton("Line Graph", 1, width / 2 - halfW, startH, w, h).setGroup("menu"); 
+  startH += space;
+  controlP5.addButton("Bar Graph (NOT IMPLEMENTED)", 2, width / 2 - halfW, startH, w, h).setGroup("menu"); 
+}
+
+void drawLineGraph()
+{
+    background(bgColor);
     fill(0);
     stroke(0);
     drawVertAxis(minFreq, maxFreq + 1, 10, border);
@@ -190,5 +204,52 @@ void draw()
     fill(0, 0, 255);
     noStroke();
     trendGraph(spaceLaunches, minFreq, maxFreq, 1, minYear, maxYear, 1, border);
+}
+
+void setup()
+{
+  // Setup
+  size(displayWidth / 2, displayHeight / 2);
+  background(bgColor);
+  stroke(0);
+  fill(0);
+  textAlign(CENTER, CENTER); 
+  rectMode(CENTER);
+  smooth();
+
+  thread("loadData");
+  
+
+}
+
+void draw()
+{
+  if(loading)
+  {
+    drawLoading();
+  }
+  else
+  {
+    if(menu)
+    {
+      drawMenu();
+      menu = false;
+    }
+  }
+}
+
+void controlEvent(ControlEvent theEvent)
+{
+  if (theEvent.isController())
+  {
+    if (theEvent.name().equals("Line Graph"))
+    {
+      //controlP5.getController("Graph1").hide();
+      // Hide all menu buttons
+      controlP5.getGroup("menu").hide();
+      
+      // Draw the line graph
+      drawLineGraph();
+    }
   }
 }
