@@ -7,6 +7,7 @@ boolean loading = false;
 boolean menu = true;
 color bgColor = color(255);
 ArrayList<Data> spaceLaunches = new ArrayList<Data>();
+ArrayList<PVector> freqA = new ArrayList<PVector>();
 float border;
 int minYear, maxYear, minFreq, maxFreq;
 
@@ -48,6 +49,17 @@ int frequencyEachYear(ArrayList<Data> spaceLaunches, int year)
   return count;
 }
 
+void frequencyArray(ArrayList<Data> spaceLaunches, ArrayList<PVector> freqA)
+{
+  PVector f;
+  
+  for (int  i = minYear ; i <= maxYear ; i++)
+  {
+    f = new PVector(i, frequencyEachYear(spaceLaunches, i));
+    freqA.add(f);
+  }
+}
+
 int maxFrequency(ArrayList<Data> spaceLaunches)
 {
   int count = 0;
@@ -72,7 +84,6 @@ int maxFrequency(ArrayList<Data> spaceLaunches)
 
 void trendGraph(ArrayList <Data> spaceLaunches, int minVert, int maxVert, int difVert, int minHorz, int maxHorz, int difHorz, float bor)
 {
-  float x1 = 0, y1 = 0;
   float x2, y2;
   
   beginShape();
@@ -81,19 +92,12 @@ void trendGraph(ArrayList <Data> spaceLaunches, int minVert, int maxVert, int di
   for (int i = 1 ; i < spaceLaunches.size() ; i++)
   {
     int curYear = Integer.parseInt(spaceLaunches.get(i).id.substring(0, 4));
-    int count = frequencyEachYear(spaceLaunches, curYear);
-    // Make a frequency array where the index is currentYear - firstYear (ie 1958 -> 1958 - 1957 = 1)
+    int count = (int)freqA.get(curYear - minYear).y;
     
     x2 = map(curYear, minHorz, maxHorz, bor, width - bor);
     y2 = map(count, minVert, maxVert, height - bor, bor);
-    vertex(x2, y2);
-    if ( ( i != 1 ) && (!spaceLaunches.get(i).id.substring(0, 4).equals(spaceLaunches.get(i - 1).id.substring(0, 4))) )
-    {
-      //line(x1, y1, x2, y2);
-    }
     
-    x1 = x2;
-    y1 = y2;
+    vertex(x2, y2);
   }
   vertex(width - bor, height - bor);
   endShape(CLOSE);
@@ -101,8 +105,10 @@ void trendGraph(ArrayList <Data> spaceLaunches, int minVert, int maxVert, int di
 
 void drawVertAxis(int minVert, int maxVert, int dif, float bor)
 {
+  textAlign(CENTER, CENTER);
+  
   // Draw main vertical axis line
-  line(bor, bor, bor, height - bor);
+  //line(bor, bor, bor, height - bor);
   
   // Write the meaning of the vertical line
   text("Launches", bor, bor - 30);
@@ -113,7 +119,8 @@ void drawVertAxis(int minVert, int maxVert, int dif, float bor)
     float y = map(i, minVert, maxVert, height - bor, bor);
     
     // Draw the gradations
-    line(bor, y, bor - 5, y);
+    //line(bor, y, bor - 5, y);
+    line(bor, y, width - bor, y); 
     
     // Write the frequency
     text(i, bor - 20, y);
@@ -156,6 +163,8 @@ void loadData()
   minFreq = 0;
   maxFreq = maxFrequency(spaceLaunches); 
   
+  frequencyArray(spaceLaunches, freqA);
+  
   loading = false;
   println("Done");
   /*
@@ -178,31 +187,48 @@ void drawLoading()
 void drawMenu()
 {
   background(bgColor);
-  
+
   // Map the positions of the buttons
   
   int w = 200;
   int halfW = w / 2;
   int h = 50;
-  int space = h + 10;
-  int startH = 100;
+  int noButtons = 4;
+  int button = 1;
+  float upperLimit = 2 * border;
+  float lowerLimit = height - 2 * border;
+  float y = map(button, 1, noButtons, upperLimit, lowerLimit);
+  
+  textSize(30);
+  textAlign(CENTER);
+  text("Space launches from 1957 - 2014", width / 2, border);
+  textSize(12);
   
   controlP5 = new ControlP5(this);
   controlP5.addGroup("menu");
-  controlP5.addButton("Line Graph", 1, width / 2 - halfW, startH, w, h).setGroup("menu"); 
-  startH += space;
-  controlP5.addButton("Bar Graph (NOT IMPLEMENTED)", 2, width / 2 - halfW, startH, w, h).setGroup("menu"); 
+  
+  controlP5.addButton("Line Graph", 1, width / 2 - halfW, (int)y, w, h).setGroup("menu"); 
+  button++;
+  y = map(button, 1, noButtons, upperLimit, lowerLimit);
+  controlP5.addButton("Bar Graph (NOT IMPLEMENTED)", 2, width / 2 - halfW, (int)y, w, h).setGroup("menu"); 
+  button++;
+  y = map(button, 1, noButtons, upperLimit, lowerLimit);
+  controlP5.addButton("Scatter Point Graph (NOT IMPLEMENTED)", 2, width / 2 - halfW, (int)y, w, h).setGroup("menu"); 
+  button++;
+  y = map(button, 1, noButtons, upperLimit, lowerLimit);
+  controlP5.addButton("Pictograph (NOT IMPLEMENTED)", 2, width / 2 - halfW, (int)y, w, h).setGroup("menu"); 
 }
 
 void drawLineGraph()
 {
     background(bgColor);
     fill(0);
+    //fill(231, 76, 60);
     stroke(0);
     drawVertAxis(minFreq, maxFreq + 1, 10, border);
     drawHorzAxis(minYear, maxYear, 3, border);
-    fill(0, 0, 255);
     noStroke();
+    fill(44, 62, 80);
     trendGraph(spaceLaunches, minFreq, maxFreq, 1, minYear, maxYear, 1, border);
 }
 
