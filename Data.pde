@@ -6,12 +6,14 @@ class Data
   String country;
   String date;
   
-  Data(String s1, String s2, String s3, String s4, String s5) 
+  Data(String s) 
   {
-    this.id = s1;
-    this.launchVehicle = s2;
-    this.payload = s3;
-    this.country = s4;
-    this.date = s5;
+    String[] temp = s.split(",");
+    
+    this.id = temp[0];
+    this.launchVehicle = temp[1];
+    this.payload = temp[2];
+    this.country = temp[3];
+    this.date = temp[4];
   }
 }
