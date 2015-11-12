@@ -5,11 +5,11 @@ class Data
   String payload;
   String country;
   String date;
-  
+
   Data(String s) 
   {
     String[] temp = s.split(",");
-    
+
     this.id = temp[0];
     this.launchVehicle = temp[1];
     this.payload = temp[2];
@@ -17,3 +17,4 @@ class Data
     this.date = temp[4];
   }
 }
+
