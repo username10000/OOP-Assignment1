@@ -306,12 +306,10 @@ void trendGraph(ArrayList <Data> spaceLaunches, int minVert, int maxVert, int di
     int curYear = i + firstYear;
     int count = freqA.get(i);
     
-    if (name.equals("USA"))
+    if (!name.equals("All"))
     {
-      count = frequencyEachYear(spaceLaunches, curYear, "US");
-      println(count);
+      count = frequencyEachYear(spaceLaunches, curYear, name);
     }
-      
 
     // Map the current year and frequency to the size of the screen
     pos.x = map(curYear, minHorz, maxHorz, bor.get("Left"), width - bor.get("Right"));
@@ -357,6 +355,20 @@ void drawLineGraph()
 
   // Draw the actual graph
   trendGraph(spaceLaunches, minFreq, maxFreq, 1, minYear, maxYear, border, "All");
+  
+  // Check if the toggle for Russia is on
+  if (controlP5.getController("Russia").getValue() == 1.0)
+  {
+    fill(255, 0, 0);
+    trendGraph(spaceLaunches, minFreq, maxFreq, 1, minYear, maxYear, border, "CIS");
+  }
+  
+  // Check if the toggle for USA is on
+  if (controlP5.getController("USA").getValue() == 1.0)
+  {
+    fill(0, 0, 255, 200);
+    trendGraph(spaceLaunches, minFreq, maxFreq, 1, minYear, maxYear, border, "US");
+  }
 }
 
 
@@ -378,8 +390,11 @@ void draw()
 {
   if (loading)
   {
+    // Draw loading screen
     drawLoading();
-  } else {
+  } 
+  else 
+  {
     if (first)
     {
       // Create the ControlP5 objects
@@ -388,6 +403,7 @@ void draw()
     }
     if (menu)
     {
+      // Draw menu screen
       drawMenu();
       menu = false;
     }
@@ -415,6 +431,7 @@ void controlEvent(ControlEvent theEvent)
   }
   if (theEvent.name().equals("sliderFirstYear"))
   {
+    // Change the minimum year and the range of the second slider based on the first
     minYear = (int)theEvent.value();
     if (minYear == 2013)
       controlP5.getController("sliderLastYear").setMin(2013);
@@ -424,6 +441,7 @@ void controlEvent(ControlEvent theEvent)
   }
   if (theEvent.name().equals("sliderLastYear"))
   {
+    // Change the maximum year and the range of the first slider based on the second
     maxYear = (int)theEvent.value();
     if (maxYear == 1958)
       controlP5.getController("sliderFirstYear").setMax(1958);
@@ -433,32 +451,34 @@ void controlEvent(ControlEvent theEvent)
   }
   if (theEvent.name().equals("USA"))
   {
-    if (theEvent.value() == 1.0)
-    {
-      fill(0, 0, 255);
-      trendGraph(spaceLaunches, minFreq, maxFreq, 1, minYear, maxYear, border, "USA");
-    }
-    else
-    {
-      drawLineGraph();
-    }
+    // Draw the graph if the toggle state is changed
+    drawLineGraph();
+  }
+  if (theEvent.name().equals("Russia"))
+  {
+    // Draw the graph if the toggle state is changed
+    drawLineGraph();
   }
   if (theEvent.name().equals("X"))
   {
+    // Hide the line graph buttons and show the menu
     boolean broadcast;
     menu = true;
     controlP5.getGroup("lineGraph").hide();
     controlP5.getController("X").hide();
 
+    // Reset the min and max Years
     minYear = firstYear;
     maxYear = lastYear;
 
+    // Reset the max range
     broadcast = controlP5.getController("sliderFirstYear").isBroadcast();
     controlP5.getController("sliderFirstYear").setBroadcast(false);
     controlP5.getController("sliderFirstYear").setMax(lastYear - 1);
     controlP5.getController("sliderFirstYear").setValue(firstYear);
     controlP5.getController("sliderFirstYear").setBroadcast(broadcast);
 
+    // Reset the min range
     broadcast = controlP5.getController("sliderLastYear").isBroadcast();
     controlP5.getController("sliderLastYear").setBroadcast(false);
     controlP5.getController("sliderLastYear").setMin(firstYear + 1);
