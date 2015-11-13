@@ -141,8 +141,8 @@ void createControlP5()
   int button = 1;
   int space = 0;
   int gap = 20;
-  int buttonWidth = 100;
-  int buttonHeight = 30;
+  int buttonWidth = (int)map(10, 0, 100, 0, width - border.get("Left") - border.get("Right")); //100;
+  int buttonHeight = (int)map(40, 0, 100, 0, border.get("Bottom")); //30;
   float upperLimit = 2 * border.get("Top");
   float lowerLimit = height - 2 * border.get("Bottom");
   float y;
@@ -231,9 +231,13 @@ void drawMenu()
 {
   background(bgColor);
 
+  // Change the bottom border back to the default value
+  border.put("Bottom", (int)map(10, 0, 100, 0, height));
+  
   // Change text size, alignment and display it
   textSize(30);
   textAlign(CENTER);
+  fill(0);
   text("Space launches from 1957 - 2014", width / 2, border.get("Top"));
 
   controlP5.getGroup("menu").show();
@@ -353,9 +357,6 @@ void drawLineGraph()
 
   // Draw the actual graph
   trendGraph(spaceLaunches, minFreq, maxFreq, 1, minYear, maxYear, border, "All");
-
-  // Change the bottom border back to the default value
-  border.put("Bottom", (int)map(10, 0, 100, 0, height));
 }
 
 
@@ -432,9 +433,15 @@ void controlEvent(ControlEvent theEvent)
   }
   if (theEvent.name().equals("USA"))
   {
-    //fill(255);
-    //trendGraph(spaceLaunches, minFreq, maxFreq, 1, minYear, maxYear, border, "USA");
-    //println("USA");
+    if (theEvent.value() == 1.0)
+    {
+      fill(0, 0, 255);
+      trendGraph(spaceLaunches, minFreq, maxFreq, 1, minYear, maxYear, border, "USA");
+    }
+    else
+    {
+      drawLineGraph();
+    }
   }
   if (theEvent.name().equals("X"))
   {
