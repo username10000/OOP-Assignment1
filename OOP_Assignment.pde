@@ -16,7 +16,6 @@ ControlFont font = new ControlFont(pfont, 15);
 boolean first = true;
 boolean loading = true;
 boolean menu = true;
-boolean circleGraph = false;
 
 // Background colour
 color bgColor = color(255);
@@ -34,6 +33,10 @@ color[] circleColour = new color[31];
 // Other variables needed
 Map<String, Integer> border = new HashMap<String, Integer>();
 int minYear, maxYear, minFreq, maxFreq, firstYear, lastYear;
+
+LineGraph lineGraph;
+BarGraph barGraph;
+CircleGraph circleGraph;
 //------------------------------Variables------------------------------//
 
 //******************************LoadData*******************************//
@@ -136,6 +139,10 @@ void loadData()
   {
     circleColour[i] = color(random(0, 255), random(0, 255), random(0, 255));
   }
+  
+  lineGraph = new LineGraph(minYear, maxYear, minFreq, maxFreq, 10);
+  barGraph = new BarGraph(minYear, maxYear, 50, 100);
+  circleGraph = new CircleGraph(minYear, maxYear);
 
   // Change the loading flag to false to stop the loading page
   loading = false;
@@ -157,7 +164,7 @@ void createControlP5()
   float lowerLimit = height - 2 * border.get("Bottom");
   float y;
   String[] buttonName = {
-    "Line Graph", "Bar Graph", "Scatter Plot Graph", "Pictograph", "Exit"
+    "Line Graph", "Bar Graph", "Circle Graph", "Pictograph", "Exit"
   };
 
   // Create a new instance of ControlP5
@@ -253,412 +260,6 @@ void drawMenu()
   controlP5.getGroup("menu").show();
 }
 
-// Draw the vertical axis of the line graph
-void drawVertAxis(int minVert, int maxVert, int dif, Map<String, Integer> bor)
-{
-  // Align the text
-  textAlign(CENTER, CENTER);
-
-  // Write the meaning of the vertical line
-  text("Launches", bor.get("Left"), bor.get("Top") - 30);
-
-  for (int i = minVert; i <= maxVert; i += dif)
-  {
-    // Find the position of the current frequency
-    float y = map(i, minVert, maxVert, height - bor.get("Bottom"), bor.get("Top"));
-
-    // Draw the gradations
-    //line(bor, y, bor - 5, y);
-    line(bor.get("Left"), y, width - bor.get("Right"), y); 
-
-    // Write the frequency
-    text(i, bor.get("Left") - 20, y);
-  }
-}
-
-// Draw the horizontal axis of the line graph
-void drawHorzAxis(int minHorz, int maxHorz, int dif, Map<String, Integer> bor)
-{
-  // Draw the main horizontal line
-  line(bor.get("Left"), height - bor.get("Bottom"), width - bor.get("Right"), height - bor.get("Bottom"));
-
-  // Write the meaning of the horizontal line
-  text("Year", width - bor.get("Right") + 30, height - bor.get("Bottom"));
-
-  for (int i = minHorz; i <= maxHorz; i += dif)
-  {
-    // Fint the position of the current year
-    float x = map(i, minHorz, maxHorz, bor.get("Left"), width - bor.get("Right"));
-
-    // Draw the gradations
-    line(x, height - bor.get("Bottom"), x, height - bor.get("Bottom") + 5);
-
-    // Write the current year
-    String ye = Integer.toString(i);
-    ye = "'" + ye.substring(2, 4);
-    text(ye, x, height - bor.get("Bottom") + 20);
-  }
-}
-
-// Draw the line graph
-void trendGraph(ArrayList <Data> spaceLaunches, int minVert, int maxVert, int difVert, int minHorz, int maxHorz, Map<String, Integer> bor, String name)
-{
-  PVector pos = new PVector(0.0f, 0.0f);
-
-  // Start the line graph shape and put a vertex at the origin point
-  beginShape();
-  vertex(bor.get("Left"), height - bor.get("Bottom"));
-
-  
-  for (int i = minHorz - firstYear; i <= maxHorz - firstYear; i++)
-  {
-    // Get the current year and the frequency
-    int curYear = i + firstYear;
-    int count = freqA.get(i);
-    
-    if (!name.equals("All"))
-    {
-      count = frequencyEachYear(spaceLaunches, curYear, name);
-    }
-
-    // Map the current year and frequency to the size of the screen
-    pos.x = map(curYear, minHorz, maxHorz, bor.get("Left"), width - bor.get("Right"));
-    pos.y = map(count, minVert, maxVert, height - bor.get("Bottom"), bor.get("Top"));
-
-    // Create the vertex with the coordinates
-    vertex(pos.x, pos.y);
-  }
-  
-  
-
-  // Put a vertex at the end of the graph and end the shape
-  vertex(width - bor.get("Right"), height - bor.get("Bottom"));
-  endShape(CLOSE);
-}
-
-// Draw the line graph and all the necessary parts needed
-void drawLineGraph()
-{
-  // Change the difference between the year gradations based on the number of years shown
-  int dif = round(map((maxYear - minYear + 1), 2014 - 1957 + 1, 1, 3, 1));
-
-  // Reset the screen
-  background(bgColor);
-
-  // Change the stroke and fill colour to black
-  fill(0);
-  stroke(0);
-  
-  // Title
-  textSize(20);
-  text("Space Launches from 1957 - 2014", width / 2, border.get("Top") / 2);
-
-  // Change the text size
-  textSize(12);
-
-  // Make the bottom border bigger to make space for the buttons
-  border.put("Bottom", (int)map(20, 0, 100, 0, height));
-
-  // Draw the axis
-  drawVertAxis(minFreq, maxFreq + 1, 10, border);
-  drawHorzAxis(minYear, maxYear, dif, border);
-
-  // Remove the stroke and change the colour of the graph's fill
-  noStroke();
-  fill(44, 62, 80);
-
-  // Draw the actual graph
-  trendGraph(spaceLaunches, minFreq, maxFreq, 1, minYear, maxYear, border, "All");
-  
-  // Check if the toggle for Russia is on
-  if (controlP5.getController("Russia").getValue() == 1.0)
-  {
-    fill(255, 0, 0);
-    trendGraph(spaceLaunches, minFreq, maxFreq, 1, minYear, maxYear, border, "CIS");
-  }
-  
-  // Check if the toggle for USA is on
-  if (controlP5.getController("USA").getValue() == 1.0)
-  {
-    fill(0, 0, 255, 200);
-    trendGraph(spaceLaunches, minFreq, maxFreq, 1, minYear, maxYear, border, "US");
-  }
-}
-
-int avgPerMonth(int month)
-{
-  int count = 0;
-  
-  for (int i = 1 ; i < spaceLaunches.size() ; i++)
-  {
-    if (Integer.parseInt(spaceLaunches.get(i).date.substring(5,7)) == month)
-      count++;
-  }
-  
-  return count;
-}
-
-int maxPerMonth()
-{
-  int maxLaunch = 0;
-  for (int i = 1 ; i <= 12 ; i++)
-  {
-    int month = avgPerMonth(i);
-    if (month > maxLaunch)
-    {
-      maxLaunch = month;
-    }
-  }
-  return maxLaunch;
-}
-
-// Draw the bar graph and all the necessary parts needed
-void drawBarGraph()
-{
-  String[] month = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
-  int minFreq = 0;
-  int maxFreq = maxPerMonth();
-  int gap = 50;
-  int dif = 100;
-  float x, y, w, h;
-  
-  // Reset the screen
-  background(bgColor);
-  
-  // Set the text alignment
-  textAlign(CENTER, CENTER);
-  
-  // Change the border
-  border.put("Bottom", (int)map(10, 0, 100, 0, height));
-  
-  // Title
-  textSize(20);
-  text("Total Space Launches each Month", width / 2, border.get("Top") / 2);
-  
-  // Set the text size
-  textSize(12);
-
-  for (int i = 0 ; i < month.length ; i++)
-  {
-    // Change the fill of the bars
-    fill(44, 62, 80);
-    
-    // Get the coordinates for the bar
-    w = ( (float)width / (float)month.length ) - gap;
-    x = map(i + 1, 1, month.length, border.get("Left"), width - border.get("Right") - w);
-    y = map(avgPerMonth(i + 1), minFreq, maxFreq, height - border.get("Bottom"), border.get("Top"));
-    h = height - border.get("Bottom") - y;
-    
-    // Draw the bar
-    rect(x, y, w, h);
-    
-    // Write the month representing each bar
-    fill(0);
-    text(month[i], x + (w / 2), height - border.get("Bottom") + 20);
-  }  
-  
-  // Change the colour of the lines
-  stroke(255);
-  
-  // Change the colour of the text
-  fill(0);
-  
-  // Draw the lines to indicate the frequency
-  for(int i = 0 ; i < maxFreq ; i+= dif)
-  {
-    // Get the coordinates for the line
-    y = map(i, minFreq, maxFreq, height - border.get("Bottom"), border.get("Top"));
-    
-    // Draw the line
-    line(border.get("Left"), y, width - border.get("Right"), y);
-    
-    // Write the frequency for each line
-    text(i, border.get("Left") - 30, y);
-  }
-}
-
-int totalDayYear(int day)
-{
-  int count = 0;
-  
-  for (int i = 1 ; i < spaceLaunches.size() ; i++)
-  {
-    if (Integer.parseInt(spaceLaunches.get(i).date.substring(8,10)) == day)
-      count++;
-  }
-  
-  return count;
-}
-
-int maxPerDay()
-{
-  int maxLaunch = 0;
-  for (int i = 1 ; i <= 31 ; i++)
-  {
-    int day = totalDayYear(i);
-    if (day > maxLaunch)
-    {
-      maxLaunch = day;
-    }
-  }
-  return maxLaunch;
-}
-
-void drawScatterPlotGraph()
-{
-  float angle = TWO_PI / 31;
-  float x, y;
-  float x2, y2;
-  int dayFreq;
-  int maxFreq = maxPerDay();
-  float sizeFreq;
-  float radius = ( height - border.get("Bottom") - border.get("Top") ) / 2;
-  float smallRadius = map(40, 0, 100, 0, radius);
-  
-  // Reset the background
-  background(bgColor);
-  
-  // Title
-  textSize(20);
-  text("Total Space Launches each Day", width / 2, border.get("Top") / 3);
-  
-  // Change the text size
-  textSize(12);
-  
-  // Change the text alignment
-  textAlign(CENTER, CENTER);
-
-  for (int i = 1 ; i <= 31 ; i++)
-  {
-    // Draw the outline
-    stroke(0);
-    fill(bgColor);
-    beginShape();
-    
-    x = width / 2 + sin(angle * (i - 1)) * radius;
-    y = height / 2 - cos(angle * (i - 1)) * radius;
-    vertex(x, y);
-    
-    x = width / 2 + sin(angle * i) * radius;
-    y = height / 2 - cos(angle * i) * radius;
-    vertex(x, y);
-    
-    x = width / 2 + sin(angle * i) * smallRadius;
-    y = height / 2 - cos(angle * i) * smallRadius;
-    vertex(x, y);
-    
-    x = width / 2 + sin(angle * (i - 1)) * smallRadius;
-    y = height / 2 - cos(angle * (i - 1)) * smallRadius;
-    vertex(x, y);   
-    
-    endShape(CLOSE);
-    
-    
-    // Calculate the total frequency on the current day
-    dayFreq = totalDayYear(i);
-    
-    // Draw the filling for each part
-    //fill(random(0, 255), random(0, 255), random(0, 255));
-    fill(circleColour[i - 1]);
-    noStroke();
-    
-    beginShape();
-    
-    x = width / 2 + sin(angle * (i - 1)) * radius;
-    y = height / 2 - cos(angle * (i - 1)) * radius;
-    vertex(x, y);
-    
-    x = width / 2 + sin(angle * i) * radius;
-    y = height / 2 - cos(angle * i) * radius;
-    vertex(x, y);
-    
-    sizeFreq = map(dayFreq, 0, maxFreq, radius, smallRadius);
-    x = width / 2 + sin(angle * i) * sizeFreq;
-    y = height / 2 - cos(angle * i) * sizeFreq;
-    vertex(x, y);
-    
-    x = width / 2 + sin(angle * (i - 1)) * sizeFreq;
-    y = height / 2 - cos(angle * (i - 1)) * sizeFreq;
-    vertex(x, y);    
-    
-    endShape(CLOSE);
-    
-    
-    // Print the day for each part
-    x = width / 2 + sin(angle * i - angle / 2) * (radius + 20);
-    y = height / 2 - cos(angle * i - angle / 2) * (radius + 20);
-    
-    fill(0);
-    text(i, x, y);
-  }
-}
-
-void checkCircleGraph()
-{
-  float radius = ( height - border.get("Bottom") - border.get("Top") ) / 2;
-  float angle = TWO_PI / 31;
-  float curAngle;
-  float smallRadius = map(40, 0, 100, 0, radius);
-  float x, y;
-  int dayFreq;
-  int day;
-  
-  // Reset the graph
-  drawScatterPlotGraph();
-  
-  // Check if the mouse is in the circle
-  if ( ( dist(mouseX, mouseY, width / 2, height / 2) < radius ) && ( dist(mouseX, mouseY, width / 2, height / 2) > smallRadius ) )
-  {
-    // Find the angle where the mouse is currently at
-    curAngle = atan2(mouseY - height / 2, mouseX - width / 2);
-    
-    // Change the angle if it's negative otherwise it gives wrong values
-    if (curAngle < 0)
-    {
-      curAngle = map(curAngle, -PI, 0, PI, TWO_PI);
-    }
-    
-    // Increase the angle a quarter of a circle so it matches the segment where the mouse is
-    curAngle += HALF_PI;
-    
-    // Increment the day by one for the correct segment
-    day = (int) map(curAngle, 0, TWO_PI, 0, 31) + 1;
-    
-    // Keep the day between 1 and 31
-    if (day > 31)
-      day -= 31;
-    
-    // Draw only the lines arround the segment to look like it's selected
-    noFill();
-    strokeWeight(3);
-    stroke(255, 0, 0);
-    
-    beginShape();
-    
-    x = width / 2 + sin(angle * (day - 1)) * radius;
-    y = height / 2 - cos(angle * (day - 1)) * radius;
-    vertex(x, y);
-    
-    x = width / 2 + sin(angle * day) * radius;
-    y = height / 2 - cos(angle * day) * radius;
-    vertex(x, y);
-    
-    x = width / 2 + sin(angle * day) * smallRadius;
-    y = height / 2 - cos(angle * day) * smallRadius;
-    vertex(x, y);
-    
-    x = width / 2 + sin(angle * (day - 1)) * smallRadius;
-    y = height / 2 - cos(angle * (day - 1)) * smallRadius;
-    vertex(x, y);   
-    
-    endShape(CLOSE);
-    
-    // Calculate the total frequency on the current day
-    dayFreq = totalDayYear(day);
-    text("Total Launches: " + dayFreq + "\nAverage Launches: " + nf(((float)dayFreq / (lastYear - firstYear + 1)), 1, 3), width / 2, height / 2);
-  }
-}
-
 void resetSettings()
 {
   fill(0);
@@ -666,6 +267,12 @@ void resetSettings()
   strokeWeight(1);
   textSize(12);
   textAlign(CENTER, CENTER);
+  
+  // Reset the borders
+  border.put("Top", (int)map(10, 0, 100, 0, height));
+  border.put("Bottom", (int)map(10, 0, 100, 0, height));
+  border.put("Left", (int)map(10, 0, 100, 0, height));
+  border.put("Right", (int)map(10, 0, 100, 0, height));
 }
 
 void setup()
@@ -703,11 +310,11 @@ void draw()
       // Draw menu screen
       drawMenu();
       menu = false;
-      circleGraph = false;
+      circleGraph.isVisible = false;
     }
-    if (circleGraph)
+    if (circleGraph.isVisible)
     {
-      checkCircleGraph();
+      circleGraph.checkCircleGraph();
     }
   }
 }
@@ -725,7 +332,7 @@ void controlEvent(ControlEvent theEvent)
       controlP5.getGroup("menu").hide();
 
       // Draw the line graph
-      drawLineGraph();
+      lineGraph.drawLineGraph();
       controlP5.getGroup("lineGraph").show();
       controlP5.getController("X").show();
     }
@@ -737,21 +344,22 @@ void controlEvent(ControlEvent theEvent)
       controlP5.getGroup("menu").hide();
       
       // Draw the Bar Graph
-      drawBarGraph();
+      barGraph.drawBarGraph();
+      //drawBarGraph();
       controlP5.getController("X").show();
     }
     
     // Scatter Plot Graph
-    if (theEvent.name().equals("Scatter Plot Graph"))
+    if (theEvent.name().equals("Circle Graph"))
     {
       // Hide all menu buttons
       controlP5.getGroup("menu").hide();
       
       // Draw the Bar Graph
-      drawScatterPlotGraph();
+      circleGraph.drawScatterPlotGraph();
       controlP5.getController("X").show();
       
-      circleGraph = true;
+      circleGraph.isVisible = true;
     }
     
     // Exit
@@ -765,32 +373,32 @@ void controlEvent(ControlEvent theEvent)
     if (theEvent.name().equals("sliderFirstYear"))
     {
       // Change the minimum year and the range of the second slider based on the first
-      minYear = (int)theEvent.value();
-      if (minYear == 2013)
+      lineGraph.minYear = (int)theEvent.value();
+      if (lineGraph.minYear == 2013)
         controlP5.getController("sliderLastYear").setMin(2013);
       else
-        controlP5.getController("sliderLastYear").setMin(minYear + 1);
-      drawLineGraph();
+        controlP5.getController("sliderLastYear").setMin(lineGraph.minYear + 1);
+      lineGraph.drawLineGraph();
     }
     if (theEvent.name().equals("sliderLastYear"))
     {
       // Change the maximum year and the range of the first slider based on the second
-      maxYear = (int)theEvent.value();
-      if (maxYear == 1958)
+      lineGraph.maxYear = (int)theEvent.value();
+      if (lineGraph.maxYear == 1958)
         controlP5.getController("sliderFirstYear").setMax(1958);
       else
-        controlP5.getController("sliderFirstYear").setMax(maxYear - 1);
-      drawLineGraph();
+        controlP5.getController("sliderFirstYear").setMax(lineGraph.maxYear - 1);
+      lineGraph.drawLineGraph();
     }
     if (theEvent.name().equals("USA"))
     {
       // Draw the graph if the toggle state is changed
-      drawLineGraph();
+      lineGraph.drawLineGraph();
     }
     if (theEvent.name().equals("Russia"))
     {
       // Draw the graph if the toggle state is changed
-      drawLineGraph();
+      lineGraph.drawLineGraph();
     }
     if (theEvent.name().equals("X"))
     {
@@ -801,8 +409,8 @@ void controlEvent(ControlEvent theEvent)
       controlP5.getController("X").hide();
   
       // Reset the min and max Years
-      minYear = firstYear;
-      maxYear = lastYear;
+      lineGraph.minYear = firstYear;
+      lineGraph.maxYear = lastYear;
   
       // Reset the max range
       broadcast = controlP5.getController("sliderFirstYear").isBroadcast();
@@ -820,4 +428,3 @@ void controlEvent(ControlEvent theEvent)
     }
   }
 }
-
