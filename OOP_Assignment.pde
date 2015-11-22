@@ -16,6 +16,7 @@ ControlFont font = new ControlFont(pfont, 15);
 boolean first = true;
 boolean loading = true;
 boolean menu = true;
+boolean circleGraph = false;
 
 // Background colour
 color bgColor = color(255);
@@ -147,7 +148,7 @@ void createControlP5()
   float lowerLimit = height - 2 * border.get("Bottom");
   float y;
   String[] buttonName = {
-    "Line Graph", "Bar Graph", "Scatter Point Graph", "Pictograph", "Exit"
+    "Line Graph", "Bar Graph", "Scatter Plot Graph", "Pictograph", "Exit"
   };
 
   // Create a new instance of ControlP5
@@ -338,6 +339,10 @@ void drawLineGraph()
   // Change the stroke and fill colour to black
   fill(0);
   stroke(0);
+  
+  // Title
+  textSize(20);
+  text("Space Launches from 1957 - 2014", width / 2, border.get("Top") / 2);
 
   // Change the text size
   textSize(12);
@@ -371,6 +376,238 @@ void drawLineGraph()
   }
 }
 
+int avgPerMonth(int month)
+{
+  int count = 0;
+  
+  for (int i = 1 ; i < spaceLaunches.size() ; i++)
+  {
+    if (Integer.parseInt(spaceLaunches.get(i).date.substring(5,7)) == month)
+      count++;
+  }
+  
+  return count;
+}
+
+int maxPerMonth()
+{
+  int maxLaunch = 0;
+  for (int i = 1 ; i <= 12 ; i++)
+  {
+    int month = avgPerMonth(i);
+    if (month > maxLaunch)
+    {
+      maxLaunch = month;
+    }
+  }
+  return maxLaunch;
+}
+
+// Draw the bar graph and all the necessary parts needed
+void drawBarGraph()
+{
+  String[] month = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
+  int minFreq = 0;
+  int maxFreq = maxPerMonth();
+  int gap = 50;
+  int dif = 100;
+  float x, y, w, h;
+  
+  // Reset the screen
+  background(bgColor);
+  
+  // Set the text alignment
+  textAlign(CENTER, CENTER);
+  
+  // Change the border
+  border.put("Bottom", (int)map(10, 0, 100, 0, height));
+  
+  // Title
+  textSize(20);
+  text("Total Space Launches each Month", width / 2, border.get("Top") / 2);
+  
+  // Set the text size
+  textSize(12);
+
+  for (int i = 0 ; i < month.length ; i++)
+  {
+    // Change the fill of the bars
+    fill(44, 62, 80);
+    
+    // Get the coordinates for the bar
+    w = ( (float)width / (float)month.length ) - gap;
+    x = map(i + 1, 1, month.length, border.get("Left"), width - border.get("Right") - w);
+    y = map(avgPerMonth(i + 1), minFreq, maxFreq, height - border.get("Bottom"), border.get("Top"));
+    h = height - border.get("Bottom") - y;
+    
+    // Draw the bar
+    rect(x, y, w, h);
+    
+    // Write the month representing each bar
+    fill(0);
+    text(month[i], x + (w / 2), height - border.get("Bottom") + 20);
+  }  
+  
+  // Change the colour of the lines
+  stroke(255);
+  
+  // Change the colour of the text
+  fill(0);
+  
+  // Draw the lines to indicate the frequency
+  for(int i = 0 ; i < maxFreq ; i+= dif)
+  {
+    // Get the coordinates for the line
+    y = map(i, minFreq, maxFreq, height - border.get("Bottom"), border.get("Top"));
+    
+    // Draw the line
+    line(border.get("Left"), y, width - border.get("Right"), y);
+    
+    // Write the frequency for each line
+    text(i, border.get("Left") - 30, y);
+  }
+}
+
+int totalDayYear(int day)
+{
+  int count = 0;
+  
+  for (int i = 1 ; i < spaceLaunches.size() ; i++)
+  {
+    if (Integer.parseInt(spaceLaunches.get(i).date.substring(8,10)) == day)
+      count++;
+  }
+  
+  return count;
+}
+
+int maxPerDay()
+{
+  int maxLaunch = 0;
+  for (int i = 1 ; i <= 31 ; i++)
+  {
+    int day = totalDayYear(i);
+    if (day > maxLaunch)
+    {
+      maxLaunch = day;
+    }
+  }
+  return maxLaunch;
+}
+
+void drawScatterPlotGraph()
+{
+  float angle = TWO_PI / 31;
+  float x, y;
+  float x2, y2;
+  int dayFreq;
+  int maxFreq = maxPerDay();
+  float sizeFreq;
+  float radius = ( height - border.get("Bottom") - border.get("Top") ) / 2;
+  float smallRadius = map(40, 0, 100, 0, radius);
+  
+  // Reset the background
+  background(bgColor);
+  
+  // Change the text size
+  textSize(12);
+  
+  // Change the text alignment
+  textAlign(CENTER, CENTER);
+
+  for (int i = 1 ; i <= 31 ; i++)
+  {
+    // Draw the outline
+    stroke(0);
+    fill(bgColor);
+    beginShape();
+    
+    x = width / 2 + sin(angle * (i - 1)) * radius;
+    y = height / 2 - cos(angle * (i - 1)) * radius;
+    vertex(x, y);
+    
+    x = width / 2 + sin(angle * i) * radius;
+    y = height / 2 - cos(angle * i) * radius;
+    vertex(x, y);
+    
+    x = width / 2 + sin(angle * i) * smallRadius;
+    y = height / 2 - cos(angle * i) * smallRadius;
+    vertex(x, y);
+    
+    x = width / 2 + sin(angle * (i - 1)) * smallRadius;
+    y = height / 2 - cos(angle * (i - 1)) * smallRadius;
+    vertex(x, y);   
+    
+    endShape(CLOSE);
+    
+    
+    // Calculate the total frequency on the current day
+    dayFreq = totalDayYear(i);
+    
+    // Draw the filling for each part
+    fill(random(0, 255), random(0, 255), random(0, 255));
+    noStroke();
+    
+    beginShape();
+    
+    x = width / 2 + sin(angle * (i - 1)) * radius;
+    y = height / 2 - cos(angle * (i - 1)) * radius;
+    vertex(x, y);
+    
+    x = width / 2 + sin(angle * i) * radius;
+    y = height / 2 - cos(angle * i) * radius;
+    vertex(x, y);
+    
+    sizeFreq = map(dayFreq, 0, maxFreq, radius, smallRadius);
+    x = width / 2 + sin(angle * i) * sizeFreq;
+    y = height / 2 - cos(angle * i) * sizeFreq;
+    vertex(x, y);
+    
+    x = width / 2 + sin(angle * (i - 1)) * sizeFreq;
+    y = height / 2 - cos(angle * (i - 1)) * sizeFreq;
+    vertex(x, y);    
+    
+    endShape(CLOSE);
+    
+    
+    // Print the day for each part
+    x = width / 2 + sin(angle * i - angle / 2) * (radius + 20);
+    y = height / 2 - cos(angle * i - angle / 2) * (radius + 20);
+    
+    fill(0);
+    text(i, x, y);
+  }
+}
+
+void checkCircleGraph()
+{
+  float radius = ( height - border.get("Bottom") - border.get("Top") ) / 2;
+  float angle = TWO_PI / 31;
+  float curAngle;
+  int day;
+  
+  // Check if the mouse is in the circle
+  if ( (mouseX >= (width / 2 - radius)) && (mouseX <= (width / 2 + radius)) && (mouseY <= (height / 2 + radius)) && (mouseY >= (height / 2 - radius)) )
+  {
+    drawScatterPlotGraph();
+    
+    curAngle = atan2(mouseY - height / 2, mouseX - width / 2);
+    
+    if (curAngle < 0)
+    {
+      curAngle = map(curAngle, -PI, 0, PI, TWO_PI);
+    }
+    
+    day = (int) map(curAngle, 0, TWO_PI, 0, 30);
+    
+    float x = width / 2 + sin(angle * day - angle / 2) * (radius - 30);
+    float y = height / 2 - cos(angle * day - angle / 2) * (radius - 30);
+    
+    ellipse(x, y, 10, 10);
+    
+    println(curAngle);
+  }
+}
 
 void setup()
 {
@@ -406,6 +643,11 @@ void draw()
       // Draw menu screen
       drawMenu();
       menu = false;
+      circleGraph = false;
+    }
+    if (circleGraph)
+    {
+      checkCircleGraph();
     }
   }
 }
@@ -414,6 +656,9 @@ void controlEvent(ControlEvent theEvent)
 {
   if (theEvent.isController())
   {
+    // Events for menu buttons
+    
+    // Line Graph
     if (theEvent.name().equals("Line Graph"))
     {
       // Hide all menu buttons
@@ -424,66 +669,95 @@ void controlEvent(ControlEvent theEvent)
       controlP5.getGroup("lineGraph").show();
       controlP5.getController("X").show();
     }
+    
+    // Bar Graph
+    if (theEvent.name().equals("Bar Graph"))
+    {
+      // Hide all menu buttons
+      controlP5.getGroup("menu").hide();
+      
+      // Draw the Bar Graph
+      drawBarGraph();
+      controlP5.getController("X").show();
+    }
+    
+    // Scatter Plot Graph
+    if (theEvent.name().equals("Scatter Plot Graph"))
+    {
+      // Hide all menu buttons
+      controlP5.getGroup("menu").hide();
+      
+      // Draw the Bar Graph
+      drawScatterPlotGraph();
+      controlP5.getController("X").show();
+      
+      circleGraph = true;
+    }
+    
+    // Exit
     if (theEvent.name().equals("Exit"))
     {
       exit();
     }
-  }
-  if (theEvent.name().equals("sliderFirstYear"))
-  {
-    // Change the minimum year and the range of the second slider based on the first
-    minYear = (int)theEvent.value();
-    if (minYear == 2013)
-      controlP5.getController("sliderLastYear").setMin(2013);
-    else
-      controlP5.getController("sliderLastYear").setMin(minYear + 1);
-    drawLineGraph();
-  }
-  if (theEvent.name().equals("sliderLastYear"))
-  {
-    // Change the maximum year and the range of the first slider based on the second
-    maxYear = (int)theEvent.value();
-    if (maxYear == 1958)
-      controlP5.getController("sliderFirstYear").setMax(1958);
-    else
-      controlP5.getController("sliderFirstYear").setMax(maxYear - 1);
-    drawLineGraph();
-  }
-  if (theEvent.name().equals("USA"))
-  {
-    // Draw the graph if the toggle state is changed
-    drawLineGraph();
-  }
-  if (theEvent.name().equals("Russia"))
-  {
-    // Draw the graph if the toggle state is changed
-    drawLineGraph();
-  }
-  if (theEvent.name().equals("X"))
-  {
-    // Hide the line graph buttons and show the menu
-    boolean broadcast;
-    menu = true;
-    controlP5.getGroup("lineGraph").hide();
-    controlP5.getController("X").hide();
-
-    // Reset the min and max Years
-    minYear = firstYear;
-    maxYear = lastYear;
-
-    // Reset the max range
-    broadcast = controlP5.getController("sliderFirstYear").isBroadcast();
-    controlP5.getController("sliderFirstYear").setBroadcast(false);
-    controlP5.getController("sliderFirstYear").setMax(lastYear - 1);
-    controlP5.getController("sliderFirstYear").setValue(firstYear);
-    controlP5.getController("sliderFirstYear").setBroadcast(broadcast);
-
-    // Reset the min range
-    broadcast = controlP5.getController("sliderLastYear").isBroadcast();
-    controlP5.getController("sliderLastYear").setBroadcast(false);
-    controlP5.getController("sliderLastYear").setMin(firstYear + 1);
-    controlP5.getController("sliderLastYear").setValue(lastYear);
-    controlP5.getController("sliderLastYear").setBroadcast(broadcast);
+    
+    
+    // Events for buttons, sliders and toggles
+    if (theEvent.name().equals("sliderFirstYear"))
+    {
+      // Change the minimum year and the range of the second slider based on the first
+      minYear = (int)theEvent.value();
+      if (minYear == 2013)
+        controlP5.getController("sliderLastYear").setMin(2013);
+      else
+        controlP5.getController("sliderLastYear").setMin(minYear + 1);
+      drawLineGraph();
+    }
+    if (theEvent.name().equals("sliderLastYear"))
+    {
+      // Change the maximum year and the range of the first slider based on the second
+      maxYear = (int)theEvent.value();
+      if (maxYear == 1958)
+        controlP5.getController("sliderFirstYear").setMax(1958);
+      else
+        controlP5.getController("sliderFirstYear").setMax(maxYear - 1);
+      drawLineGraph();
+    }
+    if (theEvent.name().equals("USA"))
+    {
+      // Draw the graph if the toggle state is changed
+      drawLineGraph();
+    }
+    if (theEvent.name().equals("Russia"))
+    {
+      // Draw the graph if the toggle state is changed
+      drawLineGraph();
+    }
+    if (theEvent.name().equals("X"))
+    {
+      // Hide the line graph buttons and show the menu
+      boolean broadcast;
+      menu = true;
+      controlP5.getGroup("lineGraph").hide();
+      controlP5.getController("X").hide();
+  
+      // Reset the min and max Years
+      minYear = firstYear;
+      maxYear = lastYear;
+  
+      // Reset the max range
+      broadcast = controlP5.getController("sliderFirstYear").isBroadcast();
+      controlP5.getController("sliderFirstYear").setBroadcast(false);
+      controlP5.getController("sliderFirstYear").setMax(lastYear - 1);
+      controlP5.getController("sliderFirstYear").setValue(firstYear);
+      controlP5.getController("sliderFirstYear").setBroadcast(broadcast);
+  
+      // Reset the min range
+      broadcast = controlP5.getController("sliderLastYear").isBroadcast();
+      controlP5.getController("sliderLastYear").setBroadcast(false);
+      controlP5.getController("sliderLastYear").setMin(firstYear + 1);
+      controlP5.getController("sliderLastYear").setValue(lastYear);
+      controlP5.getController("sliderLastYear").setBroadcast(broadcast);
+    }
   }
 }
 
