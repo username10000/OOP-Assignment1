@@ -28,6 +28,9 @@ ArrayList<Integer> freqA = new ArrayList<Integer>();
 // Create variables for the value of the sliders
 int sliderFirstYear, sliderLastYear;
 
+// Create a colour array for the circle graph
+color[] circleColour = new color[31];
+
 // Other variables needed
 Map<String, Integer> border = new HashMap<String, Integer>();
 int minYear, maxYear, minFreq, maxFreq, firstYear, lastYear;
@@ -127,6 +130,12 @@ void loadData()
 
   // Create the frequency array
   frequencyArray(spaceLaunches, freqA);
+  
+  // Create the colour for the circle graph
+  for (int i = 0 ; i < 30 ; i++)
+  {
+    circleColour[i] = color(random(0, 255), random(0, 255), random(0, 255));
+  }
 
   // Change the loading flag to false to stop the loading page
   loading = false;
@@ -509,6 +518,10 @@ void drawScatterPlotGraph()
   // Reset the background
   background(bgColor);
   
+  // Title
+  textSize(20);
+  text("Total Space Launches each Day", width / 2, border.get("Top") / 3);
+  
   // Change the text size
   textSize(12);
   
@@ -545,7 +558,8 @@ void drawScatterPlotGraph()
     dayFreq = totalDayYear(i);
     
     // Draw the filling for each part
-    fill(random(0, 255), random(0, 255), random(0, 255));
+    //fill(random(0, 255), random(0, 255), random(0, 255));
+    fill(circleColour[i - 1]);
     noStroke();
     
     beginShape();
@@ -584,29 +598,74 @@ void checkCircleGraph()
   float radius = ( height - border.get("Bottom") - border.get("Top") ) / 2;
   float angle = TWO_PI / 31;
   float curAngle;
+  float smallRadius = map(40, 0, 100, 0, radius);
+  float x, y;
+  int dayFreq;
   int day;
   
+  // Reset the graph
+  drawScatterPlotGraph();
+  
   // Check if the mouse is in the circle
-  if ( (mouseX >= (width / 2 - radius)) && (mouseX <= (width / 2 + radius)) && (mouseY <= (height / 2 + radius)) && (mouseY >= (height / 2 - radius)) )
+  if ( ( dist(mouseX, mouseY, width / 2, height / 2) < radius ) && ( dist(mouseX, mouseY, width / 2, height / 2) > smallRadius ) )
   {
-    drawScatterPlotGraph();
-    
+    // Find the angle where the mouse is currently at
     curAngle = atan2(mouseY - height / 2, mouseX - width / 2);
     
+    // Change the angle if it's negative otherwise it gives wrong values
     if (curAngle < 0)
     {
       curAngle = map(curAngle, -PI, 0, PI, TWO_PI);
     }
     
-    day = (int) map(curAngle, 0, TWO_PI, 0, 30);
+    // Increase the angle a quarter of a circle so it matches the segment where the mouse is
+    curAngle += HALF_PI;
     
-    float x = width / 2 + sin(angle * day - angle / 2) * (radius - 30);
-    float y = height / 2 - cos(angle * day - angle / 2) * (radius - 30);
+    // Increment the day by one for the correct segment
+    day = (int) map(curAngle, 0, TWO_PI, 0, 31) + 1;
     
-    ellipse(x, y, 10, 10);
+    // Keep the day between 1 and 31
+    if (day > 31)
+      day -= 31;
     
-    println(curAngle);
+    // Draw only the lines arround the segment to look like it's selected
+    noFill();
+    strokeWeight(3);
+    stroke(255, 0, 0);
+    
+    beginShape();
+    
+    x = width / 2 + sin(angle * (day - 1)) * radius;
+    y = height / 2 - cos(angle * (day - 1)) * radius;
+    vertex(x, y);
+    
+    x = width / 2 + sin(angle * day) * radius;
+    y = height / 2 - cos(angle * day) * radius;
+    vertex(x, y);
+    
+    x = width / 2 + sin(angle * day) * smallRadius;
+    y = height / 2 - cos(angle * day) * smallRadius;
+    vertex(x, y);
+    
+    x = width / 2 + sin(angle * (day - 1)) * smallRadius;
+    y = height / 2 - cos(angle * (day - 1)) * smallRadius;
+    vertex(x, y);   
+    
+    endShape(CLOSE);
+    
+    // Calculate the total frequency on the current day
+    dayFreq = totalDayYear(day);
+    text("Total Launches: " + dayFreq + "\nAverage Launches: " + nf(((float)dayFreq / (lastYear - firstYear + 1)), 1, 3), width / 2, height / 2);
   }
+}
+
+void resetSettings()
+{
+  fill(0);
+  stroke(0);
+  strokeWeight(1);
+  textSize(12);
+  textAlign(CENTER, CENTER);
 }
 
 void setup()
@@ -625,6 +684,7 @@ void setup()
 
 void draw()
 {
+  resetSettings();
   if (loading)
   {
     // Draw loading screen
