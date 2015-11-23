@@ -88,13 +88,13 @@ class LineGraph extends Graph
   }
   
   // Draw the line graph and all the necessary parts needed
-  public void drawLineGraph()
+  public void drawGraph()
   {
     // Change the difference between the year gradations based on the number of years shown
     dif = round(map((maxYear - minYear + 1), 2014 - 1957 + 1, 1, 3, 1));
   
     // Reset the screen and the text and stroke colour
-    background(bgColor);
+    background(bgColour);
     stroke(0);
     fill(0);
     

@@ -9,11 +9,20 @@ class Graph
     this.maxYear = maxYear;
     isVisible = false;
   }
-  
   Graph()
   {
     this.minYear = 1957;
     this.maxYear = 2014;
     isVisible = false;
+  }
+  
+  void drawGraph()
+  {
+    println("Draw Graph");
+  }
+  
+  void checkGraph()
+  {
+    println("Check Graph");
   }
 }

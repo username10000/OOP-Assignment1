@@ -18,7 +18,7 @@ boolean loading = true;
 boolean menu = true;
 
 // Background colour
-color bgColor = color(255);
+color bgColour = color(255);
 
 // ArrayLists for the space launches and for the frequency
 ArrayList<Data> spaceLaunches = new ArrayList<Data>();
@@ -233,7 +233,7 @@ void createControlP5()
 void drawLoading()
 {
   // Reset the background colour
-  background(bgColor);
+  background(bgColour);
 
   // Change the text colour and size
   textSize(20);
@@ -246,7 +246,7 @@ void drawLoading()
 // Draw the menu screen
 void drawMenu()
 {
-  background(bgColor);
+  background(bgColour);
 
   // Change the bottom border back to the default value
   border.put("Bottom", (int)map(10, 0, 100, 0, height));
@@ -279,7 +279,7 @@ void setup()
 {
   // Setup
   size(displayWidth / 2, displayHeight / 2);
-  background(bgColor);
+  background(bgColour);
   stroke(0);
   fill(0);
   textAlign(CENTER, CENTER); 
@@ -314,7 +314,7 @@ void draw()
     }
     if (circleGraph.isVisible)
     {
-      circleGraph.checkCircleGraph();
+      circleGraph.checkGraph();
     }
   }
 }
@@ -332,7 +332,7 @@ void controlEvent(ControlEvent theEvent)
       controlP5.getGroup("menu").hide();
 
       // Draw the line graph
-      lineGraph.drawLineGraph();
+      lineGraph.drawGraph();
       controlP5.getGroup("lineGraph").show();
       controlP5.getController("X").show();
     }
@@ -344,8 +344,8 @@ void controlEvent(ControlEvent theEvent)
       controlP5.getGroup("menu").hide();
       
       // Draw the Bar Graph
-      barGraph.drawBarGraph();
-      //drawBarGraph();
+      barGraph.drawGraph();
+      //drawGraph();
       controlP5.getController("X").show();
     }
     
@@ -356,7 +356,7 @@ void controlEvent(ControlEvent theEvent)
       controlP5.getGroup("menu").hide();
       
       // Draw the Bar Graph
-      circleGraph.drawScatterPlotGraph();
+      circleGraph.drawGraph();
       controlP5.getController("X").show();
       
       circleGraph.isVisible = true;
@@ -378,7 +378,7 @@ void controlEvent(ControlEvent theEvent)
         controlP5.getController("sliderLastYear").setMin(2013);
       else
         controlP5.getController("sliderLastYear").setMin(lineGraph.minYear + 1);
-      lineGraph.drawLineGraph();
+      lineGraph.drawGraph();
     }
     if (theEvent.name().equals("sliderLastYear"))
     {
@@ -388,17 +388,17 @@ void controlEvent(ControlEvent theEvent)
         controlP5.getController("sliderFirstYear").setMax(1958);
       else
         controlP5.getController("sliderFirstYear").setMax(lineGraph.maxYear - 1);
-      lineGraph.drawLineGraph();
+      lineGraph.drawGraph();
     }
     if (theEvent.name().equals("USA"))
     {
       // Draw the graph if the toggle state is changed
-      lineGraph.drawLineGraph();
+      lineGraph.drawGraph();
     }
     if (theEvent.name().equals("Russia"))
     {
       // Draw the graph if the toggle state is changed
-      lineGraph.drawLineGraph();
+      lineGraph.drawGraph();
     }
     if (theEvent.name().equals("X"))
     {

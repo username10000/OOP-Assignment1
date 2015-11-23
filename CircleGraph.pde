@@ -44,14 +44,14 @@ class CircleGraph extends Graph
     return maxLaunch;
   }
     
-  public void drawScatterPlotGraph()
+  public void drawGraph()
   {
     int dayFreq;
     int maxFreq = maxPerDay();
     float sizeFreq;
     
     // Reset the background
-    background(bgColor);
+    background(bgColour);
     
     // Title
     textSize(20);
@@ -64,7 +64,7 @@ class CircleGraph extends Graph
     {
       // Draw the outline
       stroke(0);
-      fill(bgColor);
+      fill(bgColour);
       beginShape();
       
       pos.x = width / 2 + sin(angle * (i - 1)) * radius;
@@ -84,6 +84,7 @@ class CircleGraph extends Graph
       vertex(pos.x, pos.y);   
       
       endShape(CLOSE);
+      
       
       // Calculate the total frequency on the current day
       dayFreq = totalDayYear(i);
@@ -123,14 +124,14 @@ class CircleGraph extends Graph
     }
   }
   
-  public void checkCircleGraph()
+  public void checkGraph()
   {
     float curAngle;
     int dayFreq;
     int day;
     
     // Reset the graph
-    drawScatterPlotGraph();
+    drawGraph();
     
     // Check if the mouse is in the circle
     if ( ( dist(mouseX, mouseY, width / 2, height / 2) < radius ) && ( dist(mouseX, mouseY, width / 2, height / 2) > smallRadius ) )

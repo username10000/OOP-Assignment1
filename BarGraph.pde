@@ -69,14 +69,14 @@ class BarGraph extends Graph
     }
   }
 
-  public void drawBarGraph()
+  public void drawGraph()
   {
     String[] month = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
     minFreq = 0;
     maxFreq = maxPerMonth();
     
     // Reset the screen
-    background(bgColor);
+    background(bgColour);
 
     // Title
     textSize(20);
