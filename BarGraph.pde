@@ -2,6 +2,7 @@ class BarGraph extends Graph
 {
   int minFreq, maxFreq;
   int gap, dif;
+  int selectedBar;
   PVector pos;
   float w, h;
    
@@ -11,6 +12,7 @@ class BarGraph extends Graph
     this.gap = gap;
     this.dif = dif;
     pos = new PVector(0.0f, 0.0f);
+    selectedBar = -1;
   }
   BarGraph()
   {
@@ -50,7 +52,7 @@ class BarGraph extends Graph
   private void drawBarChartLines()
   {
     // Change the colour of the lines
-    stroke(255);
+    stroke(254);
     
     // Change the colour of the text
     fill(0);
@@ -72,6 +74,8 @@ class BarGraph extends Graph
   public void drawGraph()
   {
     String[] month = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
+    PVector tempPos = new PVector(0.0f, 0.0f);
+    int tempI = 0;
     minFreq = 0;
     maxFreq = maxPerMonth();
     
@@ -87,14 +91,24 @@ class BarGraph extends Graph
   
     for (int i = 0 ; i < month.length ; i++)
     {
-      // Change the fill of the bars
-      fill(44, 62, 80);
-      
       // Get the coordinates for the bar
       w = ( (float)width / (float)month.length ) - gap;
       pos.x = map(i + 1, 1, month.length, border.get("Left"), width - border.get("Right") - w);
       pos.y = map(totalPerMonth(i + 1), minFreq, maxFreq, height - border.get("Bottom"), border.get("Top"));
       h = height - border.get("Bottom") - pos.y;
+      
+      // Change the fill of the bars
+      if (selectedBar == i)
+      {
+        fill(231, 76, 60);
+        tempPos.x = pos.x;
+        tempPos.y = pos.y;
+        tempI = i;
+      }
+      else
+      {
+        fill(44, 62, 80);
+      }
       
       // Draw the bar
       rect(pos.x, pos.y, w, h);
@@ -106,5 +120,27 @@ class BarGraph extends Graph
     
     // Draw the lines to indicate the frequency
     drawBarChartLines();
+    
+    // If there is a selected bar display the total value of the launches in that month
+    if (selectedBar != -1)
+    {
+      text(totalPerMonth(tempI + 1), tempPos.x + w / 2, tempPos.y - 20);
+    }
+  }
+  
+  public void checkGraph()
+  {
+    if ((mouseY < height - border.get("Bottom")) && (mouseY > border.get("Top")) && (mouseX > border.get("Left")) && (mouseX < width - border.get("Right")))
+    {
+      if (get(mouseX, mouseY) != color(bgColour))
+        selectedBar = (int)(map(mouseX, border.get("Left"), width - border.get("Right") - w, 1, 12) + 0.1f) - 1;
+      else
+        selectedBar = -1;
+    }
+    else
+    {
+      selectedBar = -1;
+    }
+    drawGraph();
   }
 }

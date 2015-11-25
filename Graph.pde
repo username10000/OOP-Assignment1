@@ -16,12 +16,12 @@ class Graph
     isVisible = false;
   }
   
-  void drawGraph()
+  public void drawGraph()
   {
     println("Draw Graph");
   }
   
-  void checkGraph()
+  public void checkGraph()
   {
     println("Check Graph");
   }

@@ -37,6 +37,7 @@ int minYear, maxYear, minFreq, maxFreq, firstYear, lastYear;
 LineGraph lineGraph;
 BarGraph barGraph;
 CircleGraph circleGraph;
+PictoGraph pictoGraph;
 //------------------------------Variables------------------------------//
 
 //******************************LoadData*******************************//
@@ -143,6 +144,7 @@ void loadData()
   lineGraph = new LineGraph(minYear, maxYear, minFreq, maxFreq, 10);
   barGraph = new BarGraph(minYear, maxYear, 50, 100);
   circleGraph = new CircleGraph(minYear, maxYear);
+  pictoGraph = new PictoGraph(minYear, maxYear);
 
   // Change the loading flag to false to stop the loading page
   loading = false;
@@ -311,10 +313,15 @@ void draw()
       drawMenu();
       menu = false;
       circleGraph.isVisible = false;
+      barGraph.isVisible = false;
     }
     if (circleGraph.isVisible)
     {
       circleGraph.checkGraph();
+    }
+    if(barGraph.isVisible)
+    {
+      barGraph.checkGraph();
     }
   }
 }
@@ -345,8 +352,9 @@ void controlEvent(ControlEvent theEvent)
       
       // Draw the Bar Graph
       barGraph.drawGraph();
-      //drawGraph();
       controlP5.getController("X").show();
+      
+      barGraph.isVisible = true;
     }
     
     // Scatter Plot Graph
@@ -360,6 +368,19 @@ void controlEvent(ControlEvent theEvent)
       controlP5.getController("X").show();
       
       circleGraph.isVisible = true;
+    }
+    
+    // PictoGraph
+    if (theEvent.name().equals("Pictograph"))
+    {
+      // Hide all menu buttons
+      controlP5.getGroup("menu").hide();
+      
+      // Draw the PictoGraph
+      pictoGraph.drawGraph();
+      controlP5.getController("X").show();
+      
+      pictoGraph.isVisible = true;
     }
     
     // Exit
