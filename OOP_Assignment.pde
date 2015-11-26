@@ -228,7 +228,8 @@ void createControlP5()
   controlP5.addGroup("pictoGraph");
   controlP5.addButton("<", 10, 0, height - border.get("Bottom") / 2, border.get("Bottom") / 2, border.get("Bottom") / 2).setGroup("pictoGraph");
   controlP5.addButton(">", 11, width - border.get("Bottom") / 2, height - border.get("Bottom") / 2, border.get("Bottom") / 2, border.get("Bottom") / 2).setGroup("pictoGraph");
-  controlP5.addButton("Auto", 12, width / 2 - halfW / 2, height - border.get("Bottom") / 2, w / 2, border.get("Bottom") / 2).setGroup("pictoGraph");
+  controlP5.addButton("Auto", 12, 0, 0, w / 2, border.get("Bottom") / 2).setGroup("pictoGraph");
+  controlP5.getGroup("pictoGraph").setLabel("");
   controlP5.getGroup("pictoGraph").hide();
   //---PrevNext---//
 
@@ -331,6 +332,7 @@ void draw()
       menu = false;
       circleGraph.isVisible = false;
       barGraph.isVisible = false;
+      pictoGraph.isVisible = false;
     }
     if (circleGraph.isVisible)
     {
@@ -341,6 +343,11 @@ void draw()
     {
       // Check if the mouse is over the bars
       barGraph.checkGraph();
+    }
+    if ((pictoGraph.isVisible) && (!pic))
+    {
+      // Check if the mouse is over rockets
+      pictoGraph.checkGraph();
     }
     if (pic)
     { 
