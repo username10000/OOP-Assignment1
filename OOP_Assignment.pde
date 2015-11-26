@@ -334,22 +334,30 @@ void draw()
     }
     if (circleGraph.isVisible)
     {
+      // Check if the mouse is over the segemnts
       circleGraph.checkGraph();
     }
     if (barGraph.isVisible)
     {
+      // Check if the mouse is over the bars
       barGraph.checkGraph();
     }
     if (pic)
     { 
-      pictoGraph.drawGraph();
+      // Draw the graph for each year until the last year or until is auto is pressed
       pictoGraph.yearPos ++;
-      sleep(1);
       
+      // Change the PictoGraph flag to false if the last year has been reached
       if (pictoGraph.yearPos > (lastYear - firstYear))
       {  
         pic = false;
+        controlP5.getController("<").show();
+        pictoGraph.yearPos = (lastYear - firstYear);
       }
+      
+      // Draw the graph
+      pictoGraph.drawGraph();
+      sleep(1);
     }
   }
 }
@@ -453,13 +461,16 @@ void controlEvent(ControlEvent theEvent)
     }
     if (theEvent.name().equals("<"))
     {
+      // Change the button to the previous year
       if (pictoGraph.yearPos == 1)
       {
+        // Hide the button if the first year has been reached
         controlP5.getController("<").hide();
         pictoGraph.yearPos = 0;
       }
       else
       {
+        // Go to the previous year
         pictoGraph.yearPos --;
         
         if (pictoGraph.yearPos != (lastYear - firstYear))
@@ -467,17 +478,21 @@ void controlEvent(ControlEvent theEvent)
           controlP5.getController(">").show();
         }
       }
+      // Draw the graph
       pictoGraph.drawGraph();
     }
     if (theEvent.name().equals(">"))
     {
+      // Change the button to the previous year
       if (pictoGraph.yearPos == (lastYear - firstYear - 1))
       {
+        // Hide the button if the last year has been reached
         controlP5.getController(">").hide();
         pictoGraph.yearPos = lastYear - firstYear;
       }
       else
       {
+        // Go to the previous year
         pictoGraph.yearPos ++;
         
         if (pictoGraph.yearPos != 0)
@@ -485,15 +500,16 @@ void controlEvent(ControlEvent theEvent)
           controlP5.getController("<").show();
         }
       }
-      
+      // Draw the graph
       pictoGraph.drawGraph();
     }
     if (theEvent.name().equals("Auto"))
     {
       if (pic)
       {
-        // *** This doesn't work
-        controlP5.getGroup("pictoGraph").show();
+        // Show the buttons if the auto button has been pressed again
+        controlP5.getController("<").show();
+        controlP5.getController(">").show();
         if (pictoGraph.yearPos == 0)
           controlP5.getController("<").hide();
         if (pictoGraph.yearPos == (lastYear - firstYear))
@@ -501,10 +517,12 @@ void controlEvent(ControlEvent theEvent)
       }
       else
       {
+        // Hide the buttons when the slide show starts
         controlP5.getController("<").hide();
         controlP5.getController(">").hide();
       }
-       pic = !pic;
+        // Toggle the PictoGraph flag
+        pic = !pic;
     }
     if (theEvent.name().equals("X"))
     {
