@@ -31,9 +31,8 @@ class PictoGraph extends Graph
     stroke(255);
     fill(0);
     
-    // *** Next and Previous buttons
     // *** Hover the rocket (and change colour) to print the launch vehicle and payload of the rocket
-    // *** Maybe a slideshow with the years?
+    // *** Maybe a slideshow with the years - almost!
     for (int i = 0 ; i < freqA.get(yearPos) ; i++)
     {
       // Get the line position of the shape

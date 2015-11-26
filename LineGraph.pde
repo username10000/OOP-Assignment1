@@ -129,7 +129,7 @@ class LineGraph extends Graph
     // Check if the toggle for USA is on
     if (controlP5.getController("USA").getValue() == 1.0)
     {
-      fill(0, 0, 255, 200);
+      fill(0, 0, 255, 150);
       trendGraph(minFreq, maxFreq, 1, minYear, maxYear, "US");
     }
   }

@@ -16,6 +16,7 @@ ControlFont font = new ControlFont(pfont, 15);
 boolean first = true;
 boolean loading = true;
 boolean menu = true;
+boolean pic = false;
 
 // Background colour
 color bgColour = color(255);
@@ -207,9 +208,6 @@ void createControlP5()
   controlP5.getController("sliderLastYear").setColorBackground(color(52, 152, 219));
   controlP5.getController("sliderLastYear").setColorForeground(color(231, 76, 60));
   controlP5.getController("sliderLastYear").setColorActive(color(231, 76, 60));
-
-  // Hide the line graph buttons
-  controlP5.getGroup("lineGraph").hide();
   //---Sliders---//
 
 
@@ -220,7 +218,19 @@ void createControlP5()
   controlP5.addToggle("Russia", false, border.get("Left") + space, height - border.get("Bottom"), buttonHeight, buttonHeight).setGroup("lineGraph");
   controlP5.getController("Russia").setColorLabel(color(0));
   space += buttonHeight + gap;
+  
+  // Hide the line graph buttons
+  controlP5.getGroup("lineGraph").hide();
   //---Toggles---//
+  
+  
+  //***PrevNext***//
+  controlP5.addGroup("pictoGraph");
+  controlP5.addButton("<", 10, 0, height - border.get("Bottom") / 2, border.get("Bottom") / 2, border.get("Bottom") / 2).setGroup("pictoGraph");
+  controlP5.addButton(">", 11, width - border.get("Bottom") / 2, height - border.get("Bottom") / 2, border.get("Bottom") / 2, border.get("Bottom") / 2).setGroup("pictoGraph");
+  controlP5.addButton("Auto", 12, width / 2 - halfW / 2, height - border.get("Bottom") / 2, w / 2, border.get("Bottom") / 2).setGroup("pictoGraph");
+  controlP5.getGroup("pictoGraph").hide();
+  //---PrevNext---//
 
 
   //***Return***//
@@ -277,10 +287,17 @@ void resetSettings()
   border.put("Right", (int)map(10, 0, 100, 0, height));
 }
 
+void sleep(int seconds)
+{
+  int start = millis();
+  
+  while ((millis() - start) <= seconds * 1000);
+}
+
 void setup()
 {
   // Setup
-  size(displayWidth / 2, displayHeight / 2);
+  size(960, 540);
   background(bgColour);
   stroke(0);
   fill(0);
@@ -319,9 +336,20 @@ void draw()
     {
       circleGraph.checkGraph();
     }
-    if(barGraph.isVisible)
+    if (barGraph.isVisible)
     {
       barGraph.checkGraph();
+    }
+    if (pic)
+    { 
+      pictoGraph.drawGraph();
+      pictoGraph.yearPos ++;
+      sleep(1);
+      
+      if (pictoGraph.yearPos > (lastYear - firstYear))
+      {  
+        pic = false;
+      }
     }
   }
 }
@@ -378,6 +406,8 @@ void controlEvent(ControlEvent theEvent)
       
       // Draw the PictoGraph
       pictoGraph.drawGraph();
+      controlP5.getGroup("pictoGraph").show();
+      controlP5.getController("<").hide();
       controlP5.getController("X").show();
       
       pictoGraph.isVisible = true;
@@ -421,12 +451,68 @@ void controlEvent(ControlEvent theEvent)
       // Draw the graph if the toggle state is changed
       lineGraph.drawGraph();
     }
+    if (theEvent.name().equals("<"))
+    {
+      if (pictoGraph.yearPos == 1)
+      {
+        controlP5.getController("<").hide();
+        pictoGraph.yearPos = 0;
+      }
+      else
+      {
+        pictoGraph.yearPos --;
+        
+        if (pictoGraph.yearPos != (lastYear - firstYear))
+        {
+          controlP5.getController(">").show();
+        }
+      }
+      pictoGraph.drawGraph();
+    }
+    if (theEvent.name().equals(">"))
+    {
+      if (pictoGraph.yearPos == (lastYear - firstYear - 1))
+      {
+        controlP5.getController(">").hide();
+        pictoGraph.yearPos = lastYear - firstYear;
+      }
+      else
+      {
+        pictoGraph.yearPos ++;
+        
+        if (pictoGraph.yearPos != 0)
+        {
+          controlP5.getController("<").show();
+        }
+      }
+      
+      pictoGraph.drawGraph();
+    }
+    if (theEvent.name().equals("Auto"))
+    {
+      if (pic)
+      {
+        // *** This doesn't work
+        controlP5.getGroup("pictoGraph").show();
+        if (pictoGraph.yearPos == 0)
+          controlP5.getController("<").hide();
+        if (pictoGraph.yearPos == (lastYear - firstYear))
+          controlP5.getController(">").hide();
+      }
+      else
+      {
+        controlP5.getController("<").hide();
+        controlP5.getController(">").hide();
+      }
+       pic = !pic;
+    }
     if (theEvent.name().equals("X"))
     {
       // Hide the line graph buttons and show the menu
       boolean broadcast;
       menu = true;
       controlP5.getGroup("lineGraph").hide();
+      controlP5.getGroup("pictoGraph").hide();
       controlP5.getController("X").hide();
   
       // Reset the min and max Years
@@ -446,6 +532,10 @@ void controlEvent(ControlEvent theEvent)
       controlP5.getController("sliderLastYear").setMin(firstYear + 1);
       controlP5.getController("sliderLastYear").setValue(lastYear);
       controlP5.getController("sliderLastYear").setBroadcast(broadcast);
+      
+      // Reset the year position for the PictoGraph
+      pictoGraph.yearPos = 0;
+      pic = false;
     }
   }
 }
