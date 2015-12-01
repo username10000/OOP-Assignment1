@@ -82,7 +82,6 @@ class PictoGraph extends Graph
       // Calculate the coordinates for the shape
       pos.x = map(posLine, 0, 43, border.get("Left"), width - border.get("Right"));
       pos.y = map((int)(i / 44), 0, 3, height - border.get("Bottom") - halfH, border.get("Top") - halfH);
-      //pos.y = height - border.get("Bottom") - halfH - h * posCol - 20 * posCol;
       
       // Draw the shape
       beginShape();
@@ -118,19 +117,15 @@ class PictoGraph extends Graph
   
   public void checkGraph()
   {
-    // *** Hover the rocket (and change colour) to print the launch vehicle and payload of the rocket
     if ((mouseY < height - border.get("Bottom")) && (mouseY > border.get("Top")) && (mouseX > border.get("Left") - halfW) && (mouseX < width - border.get("Right") + halfW) && get(mouseX, mouseY) != color(255))
     {
+      // Set the selected rocket if the curson is one a rocket
       float wIndex = map(border.get("Left") + halfW, border.get("Left") - halfW, width - border.get("Right") - halfW, 0, 43);
       float hIndex = map(height - border.get("Bottom") + h, height - border.get("Bottom"), border.get("Top"), 0, 3);
       pos.x = map(mouseX, border.get("Left") - halfW, width - border.get("Right") - halfW, 0, 43) + 0.1f;
       pos.y = map(mouseY, height - border.get("Bottom"), border.get("Top"), 0, 3) + 0.1f;
       
-      //println((pos.y - (int)pos.y) + " " + hIndex);
-      //if ((pos.x - (int)pos.x < wIndex) && (pos.y - (int)pos.y < (-hIndex)))
-      //println((int)pos.x + " " + (int)pos.y);
-      //else
-        //println("Gap");
+      // Redraw the graph with the selected rocket
       if (selectedRocket != ((int)pos.y * 44) + (int)pos.x)
       {
         selectedRocket = ((int)pos.y * 44) + (int)pos.x;
@@ -139,6 +134,7 @@ class PictoGraph extends Graph
     }
     else
     {
+      // Unset the selected rocket if the cursor is not on a rocket
       if (selectedRocket != -1)
       {
         selectedRocket = -1;
