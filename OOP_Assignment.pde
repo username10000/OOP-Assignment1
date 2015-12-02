@@ -24,6 +24,7 @@ color bgColour = color(255);
 // ArrayLists for the space launches and for the frequency
 ArrayList<Data> spaceLaunches = new ArrayList<Data>();
 ArrayList<Integer> freqA = new ArrayList<Integer>();
+ArrayList<Country> countries = new ArrayList<Country>();
 
 // Create variables for the value of the sliders
 int sliderFirstYear, sliderLastYear;
@@ -39,6 +40,7 @@ LineGraph lineGraph;
 BarGraph barGraph;
 CircleGraph circleGraph;
 PictoGraph pictoGraph;
+PieChart pieChart;
 //------------------------------Variables------------------------------//
 
 //******************************LoadData*******************************//
@@ -124,6 +126,14 @@ void loadData()
 
   // Read the data from the file
   readData(spaceLaunches);
+  
+  // Read the countries
+  String[] country = loadStrings("Countries.csv");
+  for (String c:country)
+  {
+    Country t = new Country(c);
+    countries.add(t);
+  }
 
   // Initialise the values of the year and frequence
   minYear = Integer.parseInt(spaceLaunches.get(1).id.substring(0, 4));
@@ -146,6 +156,7 @@ void loadData()
   barGraph = new BarGraph(minYear, maxYear, 50, 100);
   circleGraph = new CircleGraph(minYear, maxYear);
   pictoGraph = new PictoGraph(minYear, maxYear);
+  pieChart = new PieChart(minYear, maxYear);
 
   // Change the loading flag to false to stop the loading page
   loading = false;
@@ -434,6 +445,8 @@ void controlEvent(ControlEvent theEvent)
       // Hide all menu buttons
       controlP5.getGroup("menu").hide();
       
+      // Draw the Pie Chart
+      pieChart.drawGraph();
       controlP5.getController("X").show();
       
     }

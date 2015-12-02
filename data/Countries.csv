@@ -1,90 +1,62 @@
-AB,Arab Satellite Communications Organization
-ABS,Asia Broadcast Satellite
-AC,Asia Satellite Telecommunications Company (ASIASAT)
-ALG,Algeria
-ARGN,Argentina
-ASRA,Austria
-AUS,Australia
-AZER,Azerbaijan
-BEL,Belgium
-BELA,Belarus
-BERM,Bermuda
-BOL,Bolivia
-BRAZ,Brazil
-CA,Canada
-CHBZ,China/Brazil
-CHLE,Chile
 CIS,Russia
-COL,Colombia
-CZCH,Czech Republic (former Czechoslovakia)
-DEN,Denmark
-ECU,Ecuador
-EGYP,Egypt
-ESA,European Space Agency
-ESRO,European Space Research Organization
-EST,Estonia
-EUME,European Organization for the Exploitation of Meteorological Satellites (EUMETSAT)
-EUTE,European Telecommunications Satellite Organization (EUTELSAT)
-FGER,France/Germany
-FR,France
-FRIT,France/Italy
-GER,Germany
-GLOB,Globalstar
-GREC,Greece
-HUN,Hungary
-IM,International Mobile Satellite Organization (INMARSAT)
-IND,India
-INDO,Indonesia
-IRAN,Iran
-IRAQ,Iraq
-IRID,Iridium
-ISRA,Israel
-ISRO,Indian Space Research Organisation
-ISS,International Space Station
-IT,Italy
-ITSO,International Telecommunications Satellite Organization (INTELSAT)
-JPN,Japan
-KAZ,Kazakhstan
-LTU,Lithuania
-LUXE,Luxembourg
-MALA,Malaysia
-MEX,Mexico
-NATO,North Atlantic Treaty Organization
-NETH,Netherlands
-NICO,New ICO
-NIG,Nigeria
-NKOR,Democratic People's Republic of Korea
-NOR,Norway
-O3B,O3b Networks
-ORB,ORBCOMM
-PAKI,Pakistan
-PERU,Peru
-POL,Poland
-POR,Portugal
-PRC,People's Republic of China
-PRES,People's Republic of China/European Space Agency
-RASC,RascomStar-QAF
-ROC,Taiwan (Republic of China)
-ROM,Romania
-RP,Philippines (Republic of the Philippines)
-SAFR,South Africa
-SAUD,Saudi Arabia
-SEAL,Sea Launch
-SES,SES
-SING,Singapore
-SKOR,Republic of Korea
-SPN,Spain
-STCT,Singapore/Taiwan
-SWED,Sweden
-SWTZ,Switzerland
-THAI,Thailand
-TMMC,Turkmenistan/Monaco
-TURK,Turkey
-UAE,United Arab Emirates
-UK,United Kingdom
-UKR,Ukraine
-URY,Uruguay
 US,United States
-USBZ,United States/Brazil
+PRC,People's Republic of China
+JPN,Japan
+ITSO,International Telecommunications Satellite Organization (INTELSAT)
+IND,India
+SES,SES
+ESA,European Space Agency
+FR,France
+EUTE,European Telecommunications Satellite Organization (EUTELSAT)
+CA,Canada
+UK,United Kingdom
+GER,Germany
+IT,Italy
+GLOB,Globalstar
+ISRA,Israel
+SPN,Spain
+IM,International Mobile Satellite Organization (INMARSAT)
+INDO,Indonesia
+NATO,North Atlantic Treaty Organization
+AB,Arab Satellite Communications Organization
+SKOR,Republic of Korea
+AUS,Australia
+ESRO,European Space Research Organization
+AC,Asia Satellite Telecommunications Company (ASIASAT)
+BRAZ,Brazil
+ORB,ORBCOMM
+ABS,Asia Broadcast Satellite
+SWED,Sweden
+NETH,Netherlands
+NOR,Norway
+THAI,Thailand
+EGYP,Egypt
+CHBZ,China/Brazil
+UAE,United Arab Emirates
+PAKI,Pakistan
+MEX,Mexico
+ISS,International Space Station
+ROC,Taiwan (Republic of China)
+TURK,Turkey
+KAZ,Kazakhstan
+MALA,Malaysia
+IRAN,Iran
+O3B,O3b Networks
+FGER,France/Germany
+GREC,Greece
+ARGN,Argentina
+EUME,European Organization for the Exploitation of Meteorological Satellites (EUMETSAT)
+NIG,Nigeria
 VENZ,Venezuela
+RP,Philippines (Republic of the Philippines)
+STCT,Singapore/Taiwan
+SEAL,Sea Launch
+SAUD,Saudi Arabia
+NICO,New ICO
+ALG,Algeria
+USBZ,United States/Brazil
+RASC,RascomStar-QAF
 VTNM,Vietnam
+NKOR,Democratic People's Republic of Korea
+BOL,Bolivia
+SAFR,South Africa
