@@ -157,7 +157,6 @@ void createControlP5()
   int w = 200;
   int halfW = w / 2;
   int h = 50;
-  int noButtons = 5;
   int button = 1;
   int space = 0;
   int gap = 20;
@@ -167,8 +166,9 @@ void createControlP5()
   float lowerLimit = height - 2 * border.get("Bottom");
   float y;
   String[] buttonName = {
-    "Line Graph", "Bar Graph", "Circle Graph", "Pictograph", "Exit"
+    "Line Graph", "Bar Graph", "Circle Graph", "Pictograph", "Search", "Exit"
   };
+  int noButtons = buttonName.length;
 
   // Create a new instance of ControlP5
   controlP5 = new ControlP5(this);
@@ -426,6 +426,16 @@ void controlEvent(ControlEvent theEvent)
       controlP5.getController("X").show();
       
       pictoGraph.isVisible = true;
+    }
+    
+    // Search
+    if (theEvent.name().equals("Search"))
+    {
+      // Hide all menu buttons
+      controlP5.getGroup("menu").hide();
+      
+      controlP5.getController("X").show();
+      
     }
     
     // Exit

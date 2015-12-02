@@ -8,6 +8,7 @@ class PictoGraph extends Graph
   int halfW;
   int posCol;
   int selectedRocket = -1;
+  int animate = 0;
   
   PictoGraph(int minYear, int maxYear)
   {
@@ -65,7 +66,21 @@ class PictoGraph extends Graph
         
         textSize(15);
         fill(0);
-        text("Launch Vehicle: " + lv + ", Payload: " + pl + ", Date: " + spaceLaunches.get(index).date, width / 2, height - border.get("Bottom") / 2);
+        
+        if (animate > 0)
+        {
+          animate ++;
+          text("Launch Vehicle: " + lv + ", Payload: " + pl + ", Date: " + spaceLaunches.get(index).date, width / 2, height - map(animate, 1, 20, 0, border.get("Bottom") / 2));
+          if (animate == 20)
+          {
+            animate = -1;
+          }
+        }
+        else
+        {
+          text("Launch Vehicle: " + lv + ", Payload: " + pl + ", Date: " + spaceLaunches.get(index).date, width / 2, height - border.get("Bottom") / 2);
+        }
+        
         fill(231, 76, 60);
       }
       else
@@ -118,7 +133,10 @@ class PictoGraph extends Graph
   public void checkGraph()
   {
     if ((mouseY < height - border.get("Bottom")) && (mouseY > border.get("Top")) && (mouseX > border.get("Left") - halfW) && (mouseX < width - border.get("Right") + halfW) && get(mouseX, mouseY) != color(255))
-    {
+    { 
+      if (animate == 0)
+        animate = 1;
+      
       // Set the selected rocket if the curson is one a rocket
       float wIndex = map(border.get("Left") + halfW, border.get("Left") - halfW, width - border.get("Right") - halfW, 0, 43);
       float hIndex = map(height - border.get("Bottom") + h, height - border.get("Bottom"), border.get("Top"), 0, 3);
@@ -126,18 +144,19 @@ class PictoGraph extends Graph
       pos.y = map(mouseY, height - border.get("Bottom"), border.get("Top"), 0, 3) + 0.1f;
       
       // Redraw the graph with the selected rocket
-      if (selectedRocket != ((int)pos.y * 44) + (int)pos.x)
+      if ((selectedRocket != ((int)pos.y * 44) + (int)pos.x) || (animate > 0))
       {
         selectedRocket = ((int)pos.y * 44) + (int)pos.x;
         drawGraph();
       }
     }
     else
-    {
+    { 
       // Unset the selected rocket if the cursor is not on a rocket
       if (selectedRocket != -1)
       {
         selectedRocket = -1;
+        animate = 0;
         drawGraph();
       }
     }
