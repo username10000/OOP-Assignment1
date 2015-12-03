@@ -344,6 +344,7 @@ void draw()
       circleGraph.isVisible = false;
       barGraph.isVisible = false;
       pictoGraph.isVisible = false;
+      pieChart.isVisible = false;
     }
     if (circleGraph.isVisible)
     {
@@ -359,6 +360,11 @@ void draw()
     {
       // Check if the mouse is over rockets
       pictoGraph.checkGraph();
+    }
+    if (pieChart.isVisible)
+    {
+      // Check if the mouse is over a segment
+      pieChart.checkGraph();
     }
     if (pic)
     { 
@@ -448,6 +454,8 @@ void controlEvent(ControlEvent theEvent)
       // Draw the Pie Chart
       pieChart.drawGraph();
       controlP5.getController("X").show();
+      
+      pieChart.isVisible = true;
       
     }
     
