@@ -35,6 +35,7 @@ color[] circleColour = new color[31];
 // Other variables needed
 Map<String, Integer> border = new HashMap<String, Integer>();
 int minYear, maxYear, minFreq, maxFreq, firstYear, lastYear;
+PImage bgImage;
 
 LineGraph lineGraph;
 BarGraph barGraph;
@@ -157,6 +158,8 @@ void loadData()
   circleGraph = new CircleGraph(minYear, maxYear);
   pictoGraph = new PictoGraph(minYear, maxYear);
   pieChart = new PieChart(minYear, maxYear);
+  
+  bgImage = loadImage("Earth.jpg");
 
   // Change the loading flag to false to stop the loading page
   loading = false;
@@ -177,7 +180,7 @@ void createControlP5()
   float lowerLimit = height - 2 * border.get("Bottom");
   float y;
   String[] buttonName = {
-    "Line Graph", "Bar Graph", "Circle Graph", "Pictograph", "Search", "Exit"
+    "Between 1967 and 2014", "Each Month", "Each Day", "Each Year", "In 2014", "Exit"
   };
   int noButtons = buttonName.length;
 
@@ -270,7 +273,7 @@ void drawLoading()
 // Draw the menu screen
 void drawMenu()
 {
-  background(bgColour);
+  background(bgImage);
 
   // Change the bottom border back to the default value
   border.put("Bottom", (int)map(10, 0, 100, 0, height));
@@ -278,8 +281,8 @@ void drawMenu()
   // Change text size, alignment and display it
   textSize(30);
   textAlign(CENTER);
-  fill(0);
-  text("Space launches from 1957 - 2014", width / 2, border.get("Top"));
+  fill(255);
+  text("Space Launches", width / 2, border.get("Top"));
 
   controlP5.getGroup("menu").show();
 }
@@ -322,7 +325,9 @@ void setup()
 
 void draw()
 {
+  // Reset the size and colour settings
   resetSettings();
+  
   if (loading)
   {
     // Draw loading screen
@@ -393,7 +398,7 @@ void controlEvent(ControlEvent theEvent)
     // Events for menu buttons
     
     // Line Graph
-    if (theEvent.name().equals("Line Graph"))
+    if (theEvent.name().equals("Between 1967 and 2014"))
     {
       // Hide all menu buttons
       controlP5.getGroup("menu").hide();
@@ -405,7 +410,7 @@ void controlEvent(ControlEvent theEvent)
     }
     
     // Bar Graph
-    if (theEvent.name().equals("Bar Graph"))
+    if (theEvent.name().equals("Each Month"))
     {
       // Hide all menu buttons
       controlP5.getGroup("menu").hide();
@@ -418,7 +423,7 @@ void controlEvent(ControlEvent theEvent)
     }
     
     // Scatter Plot Graph
-    if (theEvent.name().equals("Circle Graph"))
+    if (theEvent.name().equals("Each Day"))
     {
       // Hide all menu buttons
       controlP5.getGroup("menu").hide();
@@ -431,7 +436,7 @@ void controlEvent(ControlEvent theEvent)
     }
     
     // PictoGraph
-    if (theEvent.name().equals("Pictograph"))
+    if (theEvent.name().equals("Each Year"))
     {
       // Hide all menu buttons
       controlP5.getGroup("menu").hide();
@@ -446,7 +451,7 @@ void controlEvent(ControlEvent theEvent)
     }
     
     // Search
-    if (theEvent.name().equals("Search"))
+    if (theEvent.name().equals("In 2014"))
     {
       // Hide all menu buttons
       controlP5.getGroup("menu").hide();

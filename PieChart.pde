@@ -14,35 +14,25 @@ class PieChart extends Graph
     this.pos = new PVector(width / 2, height / 2);
     radius = 200;
     selectedSegment = -1;
+    
+    // Put the frequency from 2014 for each country in an array
     for (int i = 0 ; i < countries.size() ; i++)
     {
       colour[i] = color(random(0, 255), random(0, 255), random(0, 255));
       freqC[i] = frequencyBetweenYears(2014, 2014, countries.get(i).code);
-      totalFreq = maxFrequencyBetweenYears(2014, 2014);
     }
+    
+    // Get the total number of launches in 2014
+    totalFreq = maxFrequencyBetweenYears(2014, 2014);
   }
   PieChart()
   {
     this(1957, 2014);
   }
   
-  private int frequencyByCountry(String name)
-  {
-    int count = 0;
-
-    for (int i = 1 ; i < spaceLaunches.size() ; i++)
-    { 
-      // Check if it's the wanted year
-      if (spaceLaunches.get(i).country.equals(name))
-      {
-        count ++;
-      }
-    }
-    return count;
-  }
-  
   private int frequencyBetweenYears(int first, int last, String name)
   {
+    // Find the frequency of a country between some years
     int count = 0;
 
     for (int i = 1; i < spaceLaunches.size (); i++)
@@ -61,6 +51,7 @@ class PieChart extends Graph
   
   private int maxFrequencyBetweenYears(int first, int last)
   {
+    // Find the total frequency between some years
     int maxFreq = 0;
     for (int i = 0 ; i < countries.size() ; i++)
     {
@@ -88,19 +79,24 @@ class PieChart extends Graph
       {
         angle2 += (TWO_PI * freqCountry) / totalFreq;
 
+        // Change the filling colour of the current segment
         fill(colour[i]);
         
         if (selectedSegment != i)
         {
+          // Display the segment
           arc(pos.x, pos.y, radius * 2, radius * 2, angle1, angle2, PIE);
         }
         else
         {
+          // If the segment is selected increase the radius of the arc and animate the text
           arc(pos.x, pos.y, radius * 2 + 50, radius * 2 + 50, angle1, angle2, PIE);
           
+          // Change the text size and colour
           textSize(15);
           fill(0);
           
+          // Animate the text
           if (animate > 0)
           {
             animate ++;
@@ -114,9 +110,9 @@ class PieChart extends Graph
           {
             text(countries.get(i).name + " - " + freqC[i] + " launch(es)", width / 2, height - border.get("Bottom") / 2);
           }
-          
         }
 
+        // Store the previous angle
         angle1 = angle2;
       }
     }
@@ -147,7 +143,7 @@ class PieChart extends Graph
         curAngle = map(curAngle, -PI, 0, PI, TWO_PI);
       }
       
-      // Increase the angle a quarter of a circle so it matches the segment where the mouse is
+      // Increase the angle of the circle so it matches the segment where the mouse is
       curAngle += 4 * PI / 2;
       
       for (i = 0; i < countries.size(); i++)
@@ -178,6 +174,7 @@ class PieChart extends Graph
     }
     else
     {
+      // If the mouse is not pie chart then reset the selected segment and the animate variables
       selectedSegment = -1;
       animate = 0;
     }
