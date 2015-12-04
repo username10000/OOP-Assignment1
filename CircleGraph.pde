@@ -3,6 +3,8 @@ class CircleGraph extends Graph
   float radius, smallRadius;
   float angle;
   PVector pos;
+  int[] totalDay = new int[32];
+  int maxFreq;
   
   CircleGraph(int minYear, int maxYear)
   {
@@ -11,6 +13,11 @@ class CircleGraph extends Graph
     radius = ( height - border.get("Bottom") - border.get("Top") ) / 2;
     smallRadius = map(40, 0, 100, 0, radius);
     pos = new PVector(0.0f, 0.0f);
+    for (int i = 1 ; i <= 31 ; i++)
+    {
+      totalDay[i] = totalDayYear(i);
+    }
+    maxFreq = maxPerDay();
   }
   CircleGraph()
   {
@@ -35,7 +42,7 @@ class CircleGraph extends Graph
     int maxLaunch = 0;
     for (int i = 1 ; i <= 31 ; i++)
     {
-      int day = totalDayYear(i);
+      int day = totalDay[i];
       if (day > maxLaunch)
       {
         maxLaunch = day;
@@ -47,7 +54,7 @@ class CircleGraph extends Graph
   public void drawGraph()
   {
     int dayFreq;
-    int maxFreq = maxPerDay();
+    //int maxFreq = maxPerDay();
     float sizeFreq;
     
     // Reset the background
@@ -87,7 +94,7 @@ class CircleGraph extends Graph
       
       
       // Calculate the total frequency on the current day
-      dayFreq = totalDayYear(i);
+      dayFreq = totalDay[i];
       
       // Draw the filling for each part
       //fill(random(0, 255), random(0, 255), random(0, 255));
@@ -181,7 +188,7 @@ class CircleGraph extends Graph
       endShape(CLOSE);
       
       // Calculate the total frequency on the current day
-      dayFreq = totalDayYear(day);
+      dayFreq = totalDay[day];
       text("Total Launches: " + dayFreq + "\nAverage Launches: " + nf(((float)dayFreq / (lastYear - firstYear + 1)), 1, 3), width / 2, height / 2);
     }
   }

@@ -4,7 +4,7 @@ class PictoGraph extends Graph
   int yearPos;
   int h;
   int halfH ;
-  int w;;
+  int w;
   int halfW;
   int posCol;
   int selectedRocket = -1;
@@ -127,6 +127,27 @@ class PictoGraph extends Graph
          vertex(pos.x, pos.y + halfH + halfH / 10);
          vertex(pos.x - halfW / 10, pos.y + halfH);
       endShape(CLOSE);
+      
+      if (i == selectedRocket)
+      {
+        // Display the launch number on the rocket that is selected
+        textSize(12);
+        fill(255);
+        if (i > 99)
+        {
+          text(i / 100, pos.x, pos.y + h / 10);
+          text(i % 100 / 10, pos.x, pos.y + 2 * h / 10);
+          text(i % 10, pos.x, pos.y + 3 * h / 10);
+        } else if (i > 9)
+        {
+          text(i / 10, pos.x, pos.y + h / 10);
+          text(i % 10, pos.x, pos.y + 2 * h / 10);
+        }
+        else
+        {
+          text(i, pos.x, pos.y + h / 10);
+        }
+      }
     }
   }
   

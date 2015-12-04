@@ -6,6 +6,7 @@ class PieChart extends Graph
   color[] colour = new color[countries.size()];
   int[] freqC = new int[countries.size()];
   int totalFreq;
+  int animate = 0;
   
   PieChart(int minYear, int maxYear)
   {
@@ -97,9 +98,23 @@ class PieChart extends Graph
         {
           arc(pos.x, pos.y, radius * 2 + 50, radius * 2 + 50, angle1, angle2, PIE);
           
-          textSize(12);
+          textSize(15);
           fill(0);
-          text(countries.get(i).name + " - " + freqC[i] + " launch(es)", width / 2, height - border.get("Bottom") / 2);
+          
+          if (animate > 0)
+          {
+            animate ++;
+            text(countries.get(i).name + " - " + freqC[i] + " launch(es)", width / 2, height - map(animate, 0, 20, 0, border.get("Bottom") / 2));
+            if (animate == 20)
+            {
+              animate = -1;
+            }
+          }
+          else
+          {
+            text(countries.get(i).name + " - " + freqC[i] + " launch(es)", width / 2, height - border.get("Bottom") / 2);
+          }
+          
         }
 
         angle1 = angle2;
@@ -119,7 +134,10 @@ class PieChart extends Graph
     // Check if the mouse is in the circle
     if (dist(mouseX, mouseY, width / 2, height / 2) < radius)
     {
-      
+      // Start the animation
+      if (animate == 0)
+        animate = 1;
+        
       // Find the angle where the mouse is currently at
       curAngle = atan2(mouseY - height / 2, mouseX - width / 2);
       
@@ -142,6 +160,9 @@ class PieChart extends Graph
  
           if (curAngle < angle1)
           {
+            // Start the animation if the last selected segment is different the the current selected segment
+            if (i != selectedSegment)
+              animate = 1;
             selectedSegment = i;
             break;
           }
@@ -149,12 +170,16 @@ class PieChart extends Graph
       }
       if (i == countries.size())
       {
+        // Start the animation if the last selected segment is different the the current selected segment
+        if (selectedSegment != 0)
+            animate = 1;
         selectedSegment = 0;
       }
     }
     else
     {
       selectedSegment = -1;
+      animate = 0;
     }
   }
 }
