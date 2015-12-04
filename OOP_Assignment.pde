@@ -262,20 +262,6 @@ void createControlP5()
   //---Return---//
 }
 
-// Draw the loading screen
-void drawLoading()
-{
-  // Reset the background colour
-  background(bgColour);
-
-  // Change the text colour and size
-  textSize(20);
-  fill(0);
-
-  // Display the loading text
-  text("Loading...", width / 2, height / 2);
-}
-
 // Draw the menu screen
 void drawMenu()
 {
@@ -326,13 +312,13 @@ void setup()
   imageMode(CENTER);
   smooth();
 
-  // Load the data in a separate thread
-  thread("loadData");
-  
   // Load the image
   loadingImage = new Gif(this, "Loading.gif");
   loadingImage.play();
   background(0);
+
+  // Load the data in a separate thread
+  thread("loadData");
 }
 
 void draw()
@@ -343,7 +329,6 @@ void draw()
   if (loading)
   {
     // Draw loading screen
-    //drawLoading();
     image(loadingImage, width / 2, height / 2);
   } 
   else 
