@@ -1,4 +1,5 @@
 import controlP5.*;
+import gifAnimation.*;
 import java.util.Hashtable;
 import java.util.Map;
 
@@ -32,10 +33,14 @@ int sliderFirstYear, sliderLastYear;
 // Create a colour array for the circle graph
 color[] circleColour = new color[31];
 
+// Create variables for the images
+PImage bgImage;
+Gif loadingImage;
+
 // Other variables needed
 Map<String, Integer> border = new HashMap<String, Integer>();
 int minYear, maxYear, minFreq, maxFreq, firstYear, lastYear;
-PImage bgImage;
+
 
 LineGraph lineGraph;
 BarGraph barGraph;
@@ -192,6 +197,7 @@ void createControlP5()
   //***Menu***//
   // Create a new group
   controlP5.addGroup("menu");
+  controlP5.getGroup("menu").setLabel("");
 
   // Draw the menu buttons
   for (int i = 0; i < buttonName.length; i++)
@@ -317,10 +323,16 @@ void setup()
   stroke(0);
   fill(0);
   textAlign(CENTER, CENTER); 
+  imageMode(CENTER);
   smooth();
 
   // Load the data in a separate thread
   thread("loadData");
+  
+  // Load the image
+  loadingImage = new Gif(this, "Loading.gif");
+  loadingImage.play();
+  background(0);
 }
 
 void draw()
@@ -331,7 +343,8 @@ void draw()
   if (loading)
   {
     // Draw loading screen
-    drawLoading();
+    //drawLoading();
+    image(loadingImage, width / 2, height / 2);
   } 
   else 
   {
