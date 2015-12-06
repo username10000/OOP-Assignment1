@@ -84,7 +84,7 @@ class BarGraph extends Graph
 
     // Title
     textSize(20);
-    text("Total Space Launches each Month", width / 2, border.get("Top") / 2);
+    text("Total Space Launches per Month", width / 2, border.get("Top") / 2);
     
     // Set the text size
     textSize(12);

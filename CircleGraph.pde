@@ -62,7 +62,7 @@ class CircleGraph extends Graph
     
     // Title
     textSize(20);
-    text("Total Space Launches each Day", width / 2, border.get("Top") / 3);
+    text("Total Space Launches per Day", width / 2, border.get("Top") / 3);
     
     // Change the text size
     textSize(12);

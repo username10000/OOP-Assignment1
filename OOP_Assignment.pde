@@ -1,5 +1,6 @@
 import controlP5.*;
 import gifAnimation.*;
+import ddf.minim.*;
 import java.util.Hashtable;
 import java.util.Map;
 
@@ -37,16 +38,23 @@ color[] circleColour = new color[31];
 PImage bgImage;
 Gif loadingImage;
 
-// Other variables needed
+// Create variables for the audio
+Minim minim;
+AudioPlayer audio;
+
+// Variable for the borders
 Map<String, Integer> border = new HashMap<String, Integer>();
+
+// Variables for the minimum and maximum year and minimum and maximum frequency
 int minYear, maxYear, minFreq, maxFreq, firstYear, lastYear;
 
-
+// Create instances for each graph
 LineGraph lineGraph;
 BarGraph barGraph;
 CircleGraph circleGraph;
 PictoGraph pictoGraph;
 PieChart pieChart;
+
 //------------------------------Variables------------------------------//
 
 //******************************LoadData*******************************//
@@ -87,7 +95,6 @@ int frequencyEachYear(ArrayList<Data> spaceLaunches, int year, String name)
       break;
     }
   }
-
   return count;
 }
 
@@ -158,12 +165,14 @@ void loadData()
     circleColour[i] = color(random(0, 255), random(0, 255), random(0, 255));
   }
   
+  // Instantiate the graphs
   lineGraph = new LineGraph(minYear, maxYear, minFreq, maxFreq, 10);
   barGraph = new BarGraph(minYear, maxYear, 50, 100);
   circleGraph = new CircleGraph(minYear, maxYear);
   pictoGraph = new PictoGraph(minYear, maxYear);
   pieChart = new PieChart(minYear, maxYear);
   
+  // Load the menu background image
   bgImage = loadImage("Earth.jpg");
 
   // Change the loading flag to false to stop the loading page
@@ -178,8 +187,8 @@ void createControlP5()
   int h = 50;
   int button = 1;
   int space = 0;
-  int gap = 20;
-  int buttonWidth = (int)map(10, 0, 100, 0, width - border.get("Left") - border.get("Right")); //100;
+  int gap = 50;
+  int buttonWidth = (int)map(37, 0, 100, 0, width - border.get("Left") - border.get("Right")); //100;
   int buttonHeight = (int)map(40, 0, 100, 0, border.get("Bottom")); //30;
   float upperLimit = 2 * border.get("Top");
   float lowerLimit = height - 2 * border.get("Bottom");
@@ -194,6 +203,7 @@ void createControlP5()
 
   // Change the font of all object created with ControlP5
   controlP5.setFont(font);
+  
   //***Menu***//
   // Create a new group
   controlP5.addGroup("menu");
@@ -279,6 +289,7 @@ void drawMenu()
   controlP5.getGroup("menu").show();
 }
 
+// Reset the font, background and border settings
 void resetSettings()
 {
   fill(0);
@@ -294,6 +305,7 @@ void resetSettings()
   border.put("Right", (int)map(10, 0, 100, 0, height));
 }
 
+// Method that makes the program sleep for a number of seconds
 void sleep(int seconds)
 {
   int start = millis();
@@ -315,6 +327,13 @@ void setup()
   // Load the image
   loadingImage = new Gif(this, "Loading.gif");
   loadingImage.play();
+  
+  // Load and start the music
+  minim = new Minim(this);
+  audio = minim.loadFile("space_odyssey.mp3");
+  audio.play();
+  
+  // Set the background to black for the loading
   background(0);
 
   // Load the data in a separate thread
@@ -343,6 +362,8 @@ void draw()
     {
       // Draw menu screen
       drawMenu();
+      
+      // Make all the graphs not visible
       menu = false;
       circleGraph.isVisible = false;
       barGraph.isVisible = false;
@@ -400,6 +421,7 @@ void controlEvent(ControlEvent theEvent)
     {
       // Hide all menu buttons
       controlP5.getGroup("menu").hide();
+      audio.pause();
 
       // Draw the line graph
       lineGraph.drawGraph();
@@ -412,6 +434,7 @@ void controlEvent(ControlEvent theEvent)
     {
       // Hide all menu buttons
       controlP5.getGroup("menu").hide();
+      audio.pause();
       
       // Draw the Bar Graph
       barGraph.drawGraph();
@@ -425,6 +448,7 @@ void controlEvent(ControlEvent theEvent)
     {
       // Hide all menu buttons
       controlP5.getGroup("menu").hide();
+      audio.pause();
       
       // Draw the Bar Graph
       circleGraph.drawGraph();
@@ -438,6 +462,7 @@ void controlEvent(ControlEvent theEvent)
     {
       // Hide all menu buttons
       controlP5.getGroup("menu").hide();
+      audio.pause();
       
       // Draw the PictoGraph
       pictoGraph.drawGraph();
@@ -453,6 +478,7 @@ void controlEvent(ControlEvent theEvent)
     {
       // Hide all menu buttons
       controlP5.getGroup("menu").hide();
+      audio.pause();
       
       // Draw the Pie Chart
       pieChart.drawGraph();
@@ -470,6 +496,8 @@ void controlEvent(ControlEvent theEvent)
     
     
     // Events for buttons, sliders and toggles
+    
+    // First Slider from the line graph
     if (theEvent.name().equals("sliderFirstYear"))
     {
       // Change the minimum year and the range of the second slider based on the first
@@ -480,6 +508,8 @@ void controlEvent(ControlEvent theEvent)
         controlP5.getController("sliderLastYear").setMin(lineGraph.minYear + 1);
       lineGraph.drawGraph();
     }
+    
+    // Second Slider from the line graph
     if (theEvent.name().equals("sliderLastYear"))
     {
       // Change the maximum year and the range of the first slider based on the second
@@ -490,16 +520,22 @@ void controlEvent(ControlEvent theEvent)
         controlP5.getController("sliderFirstYear").setMax(lineGraph.maxYear - 1);
       lineGraph.drawGraph();
     }
+    
+    // First Toggle from the line graph
     if (theEvent.name().equals("USA"))
     {
       // Draw the graph if the toggle state is changed
       lineGraph.drawGraph();
     }
+    
+    // Second Toggle from the line graph
     if (theEvent.name().equals("Russia"))
     {
       // Draw the graph if the toggle state is changed
       lineGraph.drawGraph();
     }
+    
+    // Previous button from the pictograph
     if (theEvent.name().equals("<"))
     {
       // Change the button to the previous year
@@ -522,6 +558,8 @@ void controlEvent(ControlEvent theEvent)
       // Draw the graph
       pictoGraph.drawGraph();
     }
+    
+    // Next button from the pictograph
     if (theEvent.name().equals(">"))
     {
       // Change the button to the previous year
@@ -544,6 +582,8 @@ void controlEvent(ControlEvent theEvent)
       // Draw the graph
       pictoGraph.drawGraph();
     }
+    
+    // Auto Button from the pictograph
     if (theEvent.name().equals("Auto"))
     {
       if (pic)
@@ -565,6 +605,8 @@ void controlEvent(ControlEvent theEvent)
         // Toggle the PictoGraph flag
         pic = !pic;
     }
+    
+    // Exit button from every graph
     if (theEvent.name().equals("X"))
     {
       // Hide the line graph buttons and show the menu

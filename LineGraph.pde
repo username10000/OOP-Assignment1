@@ -13,7 +13,7 @@ class LineGraph extends Graph
   LineGraph()
   {
     this(1957, 2014, 0, 130, 10);
-    dif = 3;;
+    dif = 3;
   }
   
   // Draw the vertical axis of the line graph
@@ -100,7 +100,7 @@ class LineGraph extends Graph
     
     // Title
     textSize(20);
-    text("Space Launches from 1957 - 2014", width / 2, border.get("Top") / 2);
+    text("Space Launches 1957 - 2014", width / 2, border.get("Top") / 2);
   
     // Change the text size
     textSize(12);
@@ -133,5 +133,4 @@ class LineGraph extends Graph
       trendGraph(minFreq, maxFreq, 1, minYear, maxYear, "US");
     }
   }
-
 }
