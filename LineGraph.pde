@@ -1,3 +1,4 @@
+// Class that renders and checks for the input of the user for the line graph (BETWEEN 1957 - 2014 button)
 class LineGraph extends Graph
 {
   int minFreq, maxFreq;

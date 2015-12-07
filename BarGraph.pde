@@ -1,3 +1,4 @@
+// Class that renders and checks for the input of the user for the bar graph (EACH MONTH button)
 class BarGraph extends Graph
 {
   int minFreq, maxFreq;

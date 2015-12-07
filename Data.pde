@@ -1,3 +1,4 @@
+// Class that stores the data extracted from the space launches dataset
 class Data
 {
   String id;

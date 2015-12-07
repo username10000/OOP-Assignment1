@@ -1,3 +1,4 @@
+// Superclass of all the graph classes
 class Graph
 {
   int minYear, maxYear;

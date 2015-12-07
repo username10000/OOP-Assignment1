@@ -1,3 +1,4 @@
+// Class that renders and checks for the input of the user for the circe graph (EACH DAY button)
 class CircleGraph extends Graph
 {
   float radius, smallRadius;
@@ -54,7 +55,6 @@ class CircleGraph extends Graph
   public void drawGraph()
   {
     int dayFreq;
-    //int maxFreq = maxPerDay();
     float sizeFreq;
     
     // Reset the background

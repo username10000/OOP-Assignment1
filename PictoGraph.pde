@@ -1,3 +1,4 @@
+// Class that renders and checks for the input of the user for the pictograph (EACH YEAR button)
 class PictoGraph extends Graph
 {
   PVector pos;

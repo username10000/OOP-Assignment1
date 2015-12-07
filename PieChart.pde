@@ -1,3 +1,4 @@
+// Class that renders and checks for the input of the user for the pie chart (IN 2014 button)
 class PieChart extends Graph
 {
   PVector pos;

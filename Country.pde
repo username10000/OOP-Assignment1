@@ -1,3 +1,4 @@
+// Class that stores the code and the description of a country
 class Country
 {
   String code;
