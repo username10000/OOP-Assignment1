@@ -1,3 +1,7 @@
+// Vlad Zat
+// C14714071
+// Assignment 1
+
 import controlP5.*;
 import gifAnimation.*;
 import ddf.minim.*;
