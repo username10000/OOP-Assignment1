@@ -12,7 +12,7 @@ This submission uses a dataset that contains all the spacecraft launches from 19
 * It will also contain animations at certain times
 
 ## Writeup
-This assignment involved using a dataset to visualise some data. I chose a dataset of all the space launches by every country from 1957 to 2014. The dataset has for each launch an International Designator, Launch Vehicle, Payload, Country and the Launch Date. The country is in an abbreviated form to reduce space. There is another file that has the full name of every country or company.
+This assignment involved using a dataset to visualise some data using Processing. I chose a dataset of all the space launches by every country from 1957 to 2014. The dataset has for each launch an International Designator, Launch Vehicle, Payload, Country and the Launch Date. The country is in an abbreviated form to reduce space. There is another file that has the full name of every country or company. For assignment I used Processing 2.
 ###### Loading Page
 ![Loading](/Screenshots/Loading.JPG)
 When the program is opened for the first time there is a loading screen. Here all the data is read, the graphs are initiated and other data necessary are extracted from the dataset.
