@@ -40,7 +40,7 @@ class LineGraph extends Graph
   
     for (int i = minHorz; i <= maxHorz; i += dif)
     {
-      // Fint the position of the current year
+      // Find the position of the current year
       float x = map(i, minHorz, maxHorz, border.get("Left"), width - border.get("Right"));
   
       // Draw the gradations
@@ -100,7 +100,7 @@ class LineGraph extends Graph
     
     // Title
     textSize(20);
-    text("Space Launches 1957 - 2014", width / 2, border.get("Top") / 2);
+    text("Space Launches " + minYear + " - " + maxYear, width / 2, border.get("Top") / 2);
   
     // Change the text size
     textSize(12);
