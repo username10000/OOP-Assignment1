@@ -1,7 +1,7 @@
 # DT228 Object Oriented Programming Assignment 1
 
 ## Dataset
-This submission uses a dataset that contains all the spacecraft launches from 1957 to 2014. It contains the names of the launch vehicles, payloads, country of origin, and date where available. The country is written in an abreviated form with the full name available in a second file.
+This submission uses a dataset that contains all the spacecraft launches from 1957 to 2014. It contains the names of the launch vehicles, payloads, country of origin, and date where available. The country is written in an abbreviated form with the full name available in a second file.
 
 ## Plan
 * In this project I plan to have at least a line graph, a bar graph, a scatter plots graph and a pictograph. Moreover, each graph will have multiple options in which to display the data such as to only show the launches between certain years or to only show the launches made by a certain nation
